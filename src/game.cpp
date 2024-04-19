@@ -9,8 +9,16 @@ struct {
 #define GREEN Colors.Green
 #define WHITE Colors.White
 
+#define GAME_RESOLUTION 20 // 20 pixels per segment. all of the elements should be drawn on the grid of 20x20 pixels
+
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
+
+#define SNAKE_SEGMENT_WIDTH 20
+#define SNAKE_SEGMENT_HEIGHT 20
+
 Snek::Snek() {
-    mWindow.create(sf::VideoMode(640, 480), "Snake");
+    mWindow.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Snake");
 }
 
 Snek::~Snek() {
@@ -27,7 +35,8 @@ int Snek::mainLoop() {
     return 0;
 }
 
-void Snek::handleEvents() {
+__attribute__((always_inline))
+inline void Snek::handleEvents() {
     while (mWindow.pollEvent(Event)) {
         switch (Event.type) {
         case sf::Event::Closed:
@@ -39,26 +48,28 @@ void Snek::handleEvents() {
 exit_loop:;
 }
 
-void Snek::updateGame() {
+__attribute__((always_inline))
+inline void Snek::updateGame() {
 
 }
 
-void Snek::DrawSnake() {
-
+__attribute__((always_inline))
+inline void Snek::DrawSnake() {
+    sf::RectangleShape snakeSeg({SNAKE_SEGMENT_WIDTH, SNAKE_SEGMENT_HEIGHT});
+    snakeSeg.setOrigin({SNAKE_SEGMENT_WIDTH >> 1, SNAKE_SEGMENT_HEIGHT >> 1});
+    snakeSeg.setFillColor(WHITE);
+    snakeSeg.setPosition({WINDOW_WIDTH >> 1, WINDOW_HEIGHT >> 1});
+    mWindow.draw(snakeSeg);
 }
 
-void Snek::drawGame() {
+__attribute__((always_inline))
+inline void Snek::drawGame() {
     
     mWindow.clear();
 
     // Draw all here
 
-    sf::CircleShape shape(50);
-
-    // set the shape color to green
-    shape.setFillColor(WHITE);
-
-    mWindow.draw(shape);
+    Snek::DrawSnake();
     
 
     mWindow.display();

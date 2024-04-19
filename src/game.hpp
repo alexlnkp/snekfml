@@ -14,10 +14,10 @@ public:
     int mainLoop();
 
 private:
-    void handleEvents();
-    void updateGame();
-    void drawGame();
+    inline void handleEvents();
+    inline void updateGame();
+    inline void drawGame();
 
 private:
-    void DrawSnake();
+    inline void DrawSnake();
 };

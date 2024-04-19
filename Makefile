@@ -12,7 +12,7 @@ CXX = g++
 LIBRARIES := sfml-graphics
 
 CFLAGS_DEBUG=-g
-CFLAGS_RELEASE=-O2
+CFLAGS_RELEASE=-O3
 
 CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra
 CXXFLAGS_DEBUG := $(CXXFLAGS_COMMON) $(CFLAGS_DEBUG)
