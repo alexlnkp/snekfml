@@ -1,7 +1,14 @@
 
+extern "C" {
+    #include <unistd.h>
+}
+
 #include "game.hpp"
 
+// A hack so the compiler trusts me for once
 #define INLINE __attribute__((always_inline)) inline
+
+#define PRINT(ARG) write(STDOUT_FILENO, ARG, sizeof(ARG))
 
 struct {
     sf::Color White = {255, 255, 255};
@@ -11,28 +18,24 @@ struct {
 #define GREEN Colors.Green
 #define WHITE Colors.White
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 640
-
-#define GAME_RESOLUTION 20 // 20 pixels per segment. all of the elements should be drawn on the grid of 20x20 pixels
-
-// So here's how the grid should look like at the current params (each [ ] is 20x20 px in size) 1:8 scale
+// Here's how the grid should look like at the current params (each [ ] is 20x20 px in size) 1:8 scale
 // [ ] [ ] [ ] [ ]
 // [ ] [ ] [ ] [ ]
 // [ ] [ ] [ ] [ ]
 // [ ] [ ] [ ] [ ]
 
-#define GRID_X_RESOLUTION (WINDOW_WIDTH / GAME_RESOLUTION)
-#define GRID_Y_RESOLUTION (WINDOW_HEIGHT / GAME_RESOLUTION)
-
-#define SNAKE_HEAD_WIDTH GRID_X_RESOLUTION
+#define SNAKE_HEAD_WIDTH  GRID_X_RESOLUTION
 #define SNAKE_HEAD_HEIGHT GRID_Y_RESOLUTION
 
-#define SNAKE_SEGMENT_WIDTH (SNAKE_HEAD_WIDTH - 4)
-#define SNAKE_SEGMENT_HEIGHT (SNAKE_HEAD_WIDTH - 4)
+constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
+constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_WIDTH - 4);
+
+constexpr uint8_t FRAMERATE = 60;
 
 Snek::Snek() {
     mWindow.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Snake");
+    mWindow.setFramerateLimit(FRAMERATE);
+
     InitSnakeHead();
 }
 
@@ -75,7 +78,7 @@ exit_loop:;
 //
 // P being the position on the grid we want to grab real position of.
 // We'll get {x * 20, y * 20} i.e. {60, 60}
-INLINE std::pair<uint16_t, uint16_t> GetGridPos(uint16_t x, uint16_t y) {
+INLINE std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) {
     return {x * GAME_RESOLUTION, y * GAME_RESOLUTION};
 }
 
@@ -110,7 +113,7 @@ INLINE void Snek::drawGame() {
     
     mWindow.clear();
 
-#ifdef DEBUG_DRAW_GRID
+#ifdef DEBUG
     DrawDebugGrid(mWindow);
 #endif
 

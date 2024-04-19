@@ -11,7 +11,7 @@ CXX = g++
 
 LIBRARIES := sfml-graphics
 
-CFLAGS_DEBUG=-g
+CFLAGS_DEBUG=-Og -g
 CFLAGS_RELEASE=-O3
 
 CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra -Wno-narrowing
@@ -52,7 +52,7 @@ DEPS	   := $(OBJECTS:.o=.d)
 OUTPUTMAIN := $(call FIXPATH,$(OUTPUT)/$(MAIN))
 
 ifeq ($(DEBUG), 1)
-CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_DEBUG)
+CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_DEBUG) -DDEBUG
 MODESTR := Debug
 else
 CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_RELEASE)
