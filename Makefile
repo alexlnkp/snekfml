@@ -14,7 +14,7 @@ LIBRARIES := sfml-graphics
 CFLAGS_DEBUG=-g
 CFLAGS_RELEASE=-O3
 
-CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra
+CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra -Wno-narrowing
 CXXFLAGS_DEBUG := $(CXXFLAGS_COMMON) $(CFLAGS_DEBUG)
 CXXFLAGS_RELEASE := $(CXXFLAGS_COMMON) $(CFLAGS_RELEASE)
 
