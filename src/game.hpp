@@ -29,6 +29,7 @@ public:
     ~Fruit();
     static Fruit* GetFruitInstance();
     inline static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape fruit_rect);
+    inline void GenerateNewFruitPosition();
     inline std::pair<uint8_t, uint8_t> GetFruitPosition() const;
 
     inline sf::RectangleShape* GetFruitRect();
@@ -52,6 +53,8 @@ private:
     sf::RectangleShape _fruit_rect;
 
     SnakeHead _Snake_Head = {};
+
+    std::pair<uint16_t, uint16_t> PrevSnakeHeadPosition;
 
     std::vector<sf::RectangleShape> snake;
 
@@ -79,7 +82,7 @@ private:
     inline void UpdateSnek(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake);
 
     inline void SetFruitInstance(Fruit* fruit);
-    inline void FruitCollision() const;
+    inline void FruitCollision(std::vector<sf::RectangleShape> &snake);
 };
 
 inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);

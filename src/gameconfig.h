@@ -32,12 +32,12 @@ struct {
 #define SNAKE_HEAD_HEIGHT GRID_Y_RESOLUTION
 
 constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
-constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_WIDTH - 4);
-constexpr std::pair<uint8_t, uint8_t> SNAKE_SEGMENT_ANCHOR = std::make_pair(SNAKE_SEGMENT_WIDTH - 2, SNAKE_SEGMENT_HEIGHT - 2);
+constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_HEIGHT - 4);
+constexpr std::pair<int8_t, int8_t> SNAKE_SEGMENT_ANCHOR = std::make_pair(-1, -1);
 
 constexpr uint8_t FRUIT_WIDTH  = (SNAKE_HEAD_WIDTH - 12);
 constexpr uint8_t FRUIT_HEIGHT = (SNAKE_HEAD_HEIGHT - 12);
-constexpr std::pair<uint8_t, uint8_t> FRUIT_ANCHOR = std::make_pair(FRUIT_WIDTH - 6, FRUIT_HEIGHT - 6);
+constexpr std::pair<int8_t, int8_t> FRUIT_ANCHOR = std::make_pair(15, 15);
 
 #pragma region Helper Functions and Macros
 
