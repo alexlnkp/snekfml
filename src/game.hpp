@@ -62,12 +62,13 @@ private:
     uint8_t posX, posY;
     static Fruit* instance;
 
-public:
+    // A hack so that Fruit can only be initialised by `Fruit X = Fruit::GetFruitInstance();`
+    // This way, there is NO way that there can be multiple fruits at the same time.
     Fruit();
+public:
     ~Fruit();
     static Fruit* GetFruitInstance();
     inline std::pair<uint8_t, uint8_t> GetFruitPosition() const;
-
 };
 
 
