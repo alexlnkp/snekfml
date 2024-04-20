@@ -68,13 +68,14 @@ exit_loop:;
 // P being the position on the grid we want to grab real position of.
 // We'll get {x * 20, y * 20} i.e. {60, 60}
 INLINE std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) {
-    return {x * GAME_RESOLUTION, y * GAME_RESOLUTION};
+    return std::make_pair<uint16_t, uint16_t>(x * GAME_RESOLUTION, y * GAME_RESOLUTION);
 }
 
 INLINE void Snek::updateGame() {
     if (tenTimer.getElapsedTime().asMilliseconds() >= 125.f) {
         UpdateSnek(_Snake_Head, snake);
-        Fruit NewFruit = *Fruit::GetFruitInstance();
+        SetFruitInstance(Fruit::GetFruitInstance());
+        _fruit_rect = *fruit_instance->GetFruitRect();
         tenTimer.restart();
     }
 }
@@ -82,11 +83,21 @@ INLINE void Snek::updateGame() {
 INLINE void Snek::UpdateSnek(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake) {
     MoveSnake(snake.back(), _Snake_Head);
 
+    FruitCollision();
+
     if (snake.size() < 2) return;
 
     // Iterate through the snake segments, excluding the head
     for (size_t i = snake.size() - 2; i != 0; --i) {
         snake.at(i).setPosition(snake.at(i + 1).getPosition());
+    }
+}
+
+INLINE void Snek::FruitCollision() const {
+    if (fruit_instance == nullptr) return;
+
+    if (_Snake_Head.position == fruit_instance->GetFruitPosition()) {
+        printf("NOMNOMNOM\n");
     }
 }
 
@@ -97,19 +108,23 @@ INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head) {
 
     _Snake_Head.velocity.X = 0;
     _Snake_Head.velocity.Y = 0;
-    _Snake_Head.position.first = GRID_X_RESOLUTION >> 1;
-    _Snake_Head.position.second = GRID_X_RESOLUTION >> 1;
+    _Snake_Head.position.first = (GRID_X_RESOLUTION >> 1) - 1;
+    _Snake_Head.position.second = (GRID_Y_RESOLUTION >> 1) - 1;
 
     snake.push_back(Snake_Head);
 }
 
 INLINE void Snek::MoveSnake(sf::RectangleShape &snake, SnakeHead &_Snake_Head) {
-    snake.move(_Snake_Head.velocity.X, _Snake_Head.velocity.Y);
+    int8_t velX = _Snake_Head.velocity.X;
+    int8_t velY = _Snake_Head.velocity.Y;
+    snake.move(velX, velY);
+    _Snake_Head.position.first  += SIGN(velX);
+    _Snake_Head.position.second += SIGN(velY);
 }
 
 INLINE void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &snake) {
     sf::RectangleShape snakeSeg({SNAKE_SEGMENT_WIDTH, SNAKE_SEGMENT_HEIGHT});
-    snakeSeg.setOrigin({SNAKE_SEGMENT_WIDTH + 4, SNAKE_SEGMENT_HEIGHT + 4});
+    snakeSeg.setOrigin(SNAKE_SEGMENT_ANCHOR.first, SNAKE_SEGMENT_ANCHOR.second);
     snakeSeg.setFillColor(WHITE);
 
     snake.push_back(snakeSeg);
@@ -126,8 +141,11 @@ INLINE void Snek::drawGame() {
 
     GRDEBUG(DrawDebugGrid(mWindow))
 
-    Snek::DrawSnake();
+    // This alone made me suffer more than the whole project so far.
+    Fruit::DrawFruit(mWindow, _fruit_rect);
     
+    Snek::DrawSnake();
+
     mWindow.display();
 }
 
@@ -135,25 +153,46 @@ INLINE void Snek::drawGame() {
 
 Fruit* Fruit::instance = nullptr;
 
-Fruit::Fruit() {
-    posX = rand() % GRID_X_RESOLUTION;
-    posY = rand() % GRID_Y_RESOLUTION;
+INLINE sf::RectangleShape* Fruit::GetFruitRect() {
+    return &fruit_rect;
+}
 
+Fruit::Fruit() {
+    posX = rand() % (GRID_X_RESOLUTION - 1);
+    posY = rand() % (GRID_Y_RESOLUTION - 1);
+    
     GRDEBUG(printf("A fruit is initialised at "))
     GRDEBUG(printf("[X%d; Y%d]\n", posX, posY))
+
+    fruit_rect = sf::RectangleShape({FRUIT_WIDTH, FRUIT_HEIGHT});
+    fruit_rect.setFillColor(GREEN);
+    auto GridPosFruit = GetGridPos(posX, posY);
+    fruit_rect.setPosition(GridPosFruit.first, GridPosFruit.second);
+
+    fruit_rect.setOrigin(FRUIT_ANCHOR.first, FRUIT_ANCHOR.second);
+
 }
 
 Fruit::~Fruit() {
 
 }
 
+INLINE void Snek::SetFruitInstance(Fruit* fruit) {
+    fruit_instance = fruit;
+}
+
+INLINE void Fruit::DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape fruit_rect) {
+    mWindow.draw(fruit_rect);
+}
+
 Fruit* Fruit::GetFruitInstance() {
-    instance = (!instance) ? new Fruit() : instance;
+    instance = (instance == nullptr) ? new Fruit() : instance;
     return instance;
 }
 
+// Return the GRID POSITION X=[0;32], Y=[0;32]
 INLINE std::pair<uint8_t, uint8_t> Fruit::GetFruitPosition() const {
-    return { posX, posY };
+    return std::make_pair<uint8_t, uint8_t>(posX - 1, posY - 1);
 }
 
 #pragma endregion

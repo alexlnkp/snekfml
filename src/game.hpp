@@ -15,6 +15,25 @@ struct SnakeHead {
     Velocity velocity;
 };
 
+class Fruit {
+private:
+    uint8_t posX, posY;
+    static Fruit* instance;
+    sf::RectangleShape fruit_rect;
+
+    // A hack so that Fruit can only be initialised by `Fruit X = Fruit::GetFruitInstance();`
+    // This way, there is NO way that there can be multiple fruits at the same time.
+    Fruit();
+
+public:
+    ~Fruit();
+    static Fruit* GetFruitInstance();
+    inline static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape fruit_rect);
+    inline std::pair<uint8_t, uint8_t> GetFruitPosition() const;
+
+    inline sf::RectangleShape* GetFruitRect();
+};
+
 class Snek {
 private:
     sf::Time currentTime;
@@ -28,6 +47,9 @@ private:
 
     sf::RenderWindow mWindow;
     sf::Event Event;
+
+    Fruit* fruit_instance;
+    sf::RectangleShape _fruit_rect;
 
     SnakeHead _Snake_Head = {};
 
@@ -55,22 +77,10 @@ private:
     inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &snake);
 
     inline void UpdateSnek(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake);
+
+    inline void SetFruitInstance(Fruit* fruit);
+    inline void FruitCollision() const;
 };
-
-class Fruit {
-private:
-    uint8_t posX, posY;
-    static Fruit* instance;
-
-    // A hack so that Fruit can only be initialised by `Fruit X = Fruit::GetFruitInstance();`
-    // This way, there is NO way that there can be multiple fruits at the same time.
-    Fruit();
-public:
-    ~Fruit();
-    static Fruit* GetFruitInstance();
-    inline std::pair<uint8_t, uint8_t> GetFruitPosition() const;
-};
-
 
 inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);
 
@@ -79,10 +89,10 @@ inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);
 GRDEBUG(
     __attribute__((always_inline))
     inline void DrawDebugGrid(sf::RenderWindow &mWindow) {
-        for (int i = 0; i < GRID_X_RESOLUTION + 1; i++) {
-            for (int j = 0; j < GRID_Y_RESOLUTION + 1; j++) {
+        for (int i = 0; i < GRID_X_RESOLUTION; i++) {
+            for (int j = 0; j < GRID_Y_RESOLUTION; j++) {
                 sf::RectangleShape grSeg({10, 10});
-                grSeg.setFillColor(sf::Color(100, 100, 100));
+                grSeg.setFillColor(sf::Color(100, 100, 100, 50));
                 auto GridPos = GetGridPos(i, j);
                 grSeg.setPosition({GridPos.first, GridPos.second});
                 mWindow.draw(grSeg);
