@@ -75,7 +75,9 @@ INLINE void Snek::updateGame() {
     if (tenTimer.getElapsedTime().asMilliseconds() >= 125.f) {
         UpdateSnek(_Snake_Head, snake);
         Fruit NewFruit = *Fruit::GetFruitInstance();
+#ifdef DEBUG
         printf("X%d\nY%d\n", NewFruit.GetFruitPosition().first, NewFruit.GetFruitPosition().second);
+#endif
         tenTimer.restart();
     }
 }
