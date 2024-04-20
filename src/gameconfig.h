@@ -8,9 +8,6 @@
 constexpr uint8_t GRID_X_RESOLUTION = (WINDOW_WIDTH / GAME_RESOLUTION) - 1;
 constexpr uint8_t GRID_Y_RESOLUTION = (WINDOW_HEIGHT / GAME_RESOLUTION) - 1;
 
-// A hack so the compiler trusts me for once
-#define INLINE __attribute__((always_inline)) inline
-
 struct {
     sf::Color White = {255, 255, 255};
     sf::Color Green = {0, 255, 0};
@@ -36,3 +33,18 @@ constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_WIDTH - 4);
 // The lower the framerate - the longer SFML initializes after creating a window.
 // Also, sf::Event becomes rather laggy and unresponsive with lower framerate. I assume I have to manually lower the framerate instead.
 constexpr uint8_t FRAMERATE = 60;
+
+#pragma region Helper Functions and Macros
+
+// A hack so the compiler trusts me for once
+#define INLINE __attribute__((always_inline)) inline
+
+// A hack so that i don't have to copy & paste `#ifdef GRAPHIC_DEBUG` . . . `#endif` for every graphic debug command
+#ifdef GRAPHIC_DEBUG
+#   define GRDEBUG(DEB_COM) DEB_COM;
+#else
+#   define GRDEBUG(DEB_COM) ;
+#endif
+
+
+#pragma endregion

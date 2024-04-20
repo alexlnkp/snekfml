@@ -76,19 +76,18 @@ inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);
 
 #pragma region Debug
 
-#ifdef GRAPHIC_DEBUG
-__attribute__((always_inline))
-inline void DrawDebugGrid(sf::RenderWindow &mWindow) {
-    for (int i = 0; i < GRID_X_RESOLUTION + 1; i++) {
-        for (int j = 0; j < GRID_Y_RESOLUTION + 1; j++) {
-            sf::RectangleShape grSeg({10, 10});
-            grSeg.setFillColor(sf::Color(100, 100, 100));
-            auto GridPos = GetGridPos(i, j);
-            grSeg.setPosition({GridPos.first, GridPos.second});
-            mWindow.draw(grSeg);
+GRDEBUG(
+    __attribute__((always_inline))
+    inline void DrawDebugGrid(sf::RenderWindow &mWindow) {
+        for (int i = 0; i < GRID_X_RESOLUTION + 1; i++) {
+            for (int j = 0; j < GRID_Y_RESOLUTION + 1; j++) {
+                sf::RectangleShape grSeg({10, 10});
+                grSeg.setFillColor(sf::Color(100, 100, 100));
+                auto GridPos = GetGridPos(i, j);
+                grSeg.setPosition({GridPos.first, GridPos.second});
+                mWindow.draw(grSeg);
+            }
         }
     }
-}
-#endif
-
+)
 #pragma endregion

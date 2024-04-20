@@ -75,9 +75,6 @@ INLINE void Snek::updateGame() {
     if (tenTimer.getElapsedTime().asMilliseconds() >= 125.f) {
         UpdateSnek(_Snake_Head, snake);
         Fruit NewFruit = *Fruit::GetFruitInstance();
-#ifdef DEBUG
-        printf("X%d\nY%d\n", NewFruit.GetFruitPosition().first, NewFruit.GetFruitPosition().second);
-#endif
         tenTimer.restart();
     }
 }
@@ -127,9 +124,7 @@ INLINE void Snek::DrawSnake() {
 INLINE void Snek::drawGame() {
     mWindow.clear();
 
-#ifdef GRAPHIC_DEBUG
-    DrawDebugGrid(mWindow);
-#endif
+    GRDEBUG(DrawDebugGrid(mWindow))
 
     Snek::DrawSnake();
     
@@ -143,6 +138,9 @@ Fruit* Fruit::instance = nullptr;
 Fruit::Fruit() {
     posX = rand() % GRID_X_RESOLUTION;
     posY = rand() % GRID_Y_RESOLUTION;
+
+    GRDEBUG(printf("A fruit is initialised at "))
+    GRDEBUG(printf("[X%d; Y%d]\n", posX, posY))
 }
 
 Fruit::~Fruit() {
@@ -151,7 +149,6 @@ Fruit::~Fruit() {
 
 Fruit* Fruit::GetFruitInstance() {
     instance = (!instance) ? new Fruit() : instance;
-
     return instance;
 }
 
