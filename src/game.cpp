@@ -8,8 +8,8 @@ Snek::Snek(int_least64_t seed) {
     srand(seed);
     mWindow.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Snake");
     mWindow.setFramerateLimit(FRAMERATE);
-    sf::RectangleShape Snake_Head({SNAKE_HEAD_WIDTH, SNAKE_HEAD_HEIGHT});
-    InitSnakeHead(Snake_Head);
+    Snake_Head.setSize({SNAKE_HEAD_WIDTH, SNAKE_HEAD_HEIGHT});
+    InitSnakeHead(Snake_Head, _Snake_Head_S);
 }
 
 Snek::~Snek() {
@@ -77,13 +77,15 @@ INLINE void Snek::updateGame() {
 }
 
 INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) {
-    MoveSnake(SnakeTail.back(), _Snake_Head_S);
+    MoveSnake(Snake_Head, _Snake_Head_S);
     FruitCollision(SnakeTail);
 
     if (SnakeTail.size() > 1) {
-        // Iterate through the SnakeTail segments, excluding the head
-        for (size_t i = SnakeTail.size() - 2; i > 0; i--) {
-            SnakeTail.at(i).setPosition(SnakeTail.at(i + 1).getPosition());
+
+        for (size_t i = SnakeTail.size() - 2; i > 0; --i) {
+            SnakeTail.at(i + 1).setPosition(SnakeTail.at(i).getPosition());
+            SnakeTail.at(i).setPosition(PrevSnakeHeadPosition.first, PrevSnakeHeadPosition.second);
+            
         }
     }
 
@@ -92,15 +94,19 @@ INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::Rectang
 INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail) {
     if (PTR_FruitInstance == nullptr) return;
 
-    if (_Snake_Head_S.position == PTR_FruitInstance->GetFruitPosition()) {
-        printf("NOMNOMNOM\n");
-        PTR_FruitInstance->GenerateNewFruitPosition();
-        
-        AddSegmentToSnake(SnakeTail);
+    // For some reason without this check a segfault is guaranteed...
+    // Why? Who even knows! Compiling with `-Og -g` never segfaulted here, even without this check
+    if (_Snake_Head_S.velocity.X | _Snake_Head_S.velocity.Y) {
+        if (_Snake_Head_S.position == PTR_FruitInstance->GetFruitPosition()) {
+            GRDEBUG(printf("NOMNOMNOM\n"))
+            PTR_FruitInstance->GenerateNewFruitPosition();
+            
+            AddSegmentToSnake(SnakeTail);
+        }
     }
 }
 
-INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head) {
+INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) {
     Snake_Head.setPosition(GRID_MID_POS_X * GAME_RESOLUTION, GRID_MID_POS_Y * GAME_RESOLUTION);
     Snake_Head.setFillColor(WHITE);
 
@@ -108,18 +114,16 @@ INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head) {
     _Snake_Head_S.velocity.Y = 0;
     _Snake_Head_S.position.first = GRID_MID_POS_X;
     _Snake_Head_S.position.second = GRID_MID_POS_Y;
-
-    SnakeTail.push_back(Snake_Head);
 }
 
-INLINE void Snek::MoveSnake(sf::RectangleShape &SnakeTail, SnakeHead_S &_Snake_Head_S) {
+INLINE void Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) {
     int8_t velX = _Snake_Head_S.velocity.X;
     int8_t velY = _Snake_Head_S.velocity.Y;
 
-    PrevSnakeHeadPosition.first  = SnakeTail.getPosition().x;
-    PrevSnakeHeadPosition.second = SnakeTail.getPosition().y;
+    PrevSnakeHeadPosition.first  = Snake_Head.getPosition().x;
+    PrevSnakeHeadPosition.second = Snake_Head.getPosition().y;
 
-    SnakeTail.move(velX, velY);
+    Snake_Head.move(velX, velY);
 
     _Snake_Head_S.position.first  += SIGN(velX);
     _Snake_Head_S.position.second += SIGN(velY);
@@ -131,10 +135,11 @@ INLINE void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) 
     snakeSeg.setPosition(PrevSnakeHeadPosition.first, PrevSnakeHeadPosition.second);
     snakeSeg.setFillColor(WHITE);
 
-    SnakeTail.insert(SnakeTail.begin(), snakeSeg);
+    SnakeTail.push_back(snakeSeg);
 }
 
 INLINE void Snek::DrawSnake() {
+    mWindow.draw(Snake_Head);
     for (sf::RectangleShape snakeSeg : SnakeTail) {
         mWindow.draw(snakeSeg);
     }

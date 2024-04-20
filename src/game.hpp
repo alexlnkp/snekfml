@@ -17,7 +17,8 @@ struct SnakeHead_S {
 
 class Fruit {
 private:
-    uint8_t F_PosX, F_PosY;
+    uint8_t F_PosX = 0; 
+    uint8_t F_PosY = 0;
     static Fruit* S_PTR_FruitInstanceOrigin;
     sf::RectangleShape F_FruitRect;
 
@@ -49,6 +50,7 @@ private:
 
     std::pair<uint16_t, uint16_t> PrevSnakeHeadPosition;
 
+    sf::RectangleShape Snake_Head;
     std::vector<sf::RectangleShape> SnakeTail;
 
 public:
@@ -67,9 +69,9 @@ private:
 private:
     inline void DrawSnake();
 
-    inline void MoveSnake(sf::RectangleShape &SnakeTail, SnakeHead_S &_Snake_Head_S);
+    inline void MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S);
 
-    inline void InitSnakeHead(sf::RectangleShape &Snake_Head);
+    inline void InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S);
     inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail);
 
     inline void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail);
