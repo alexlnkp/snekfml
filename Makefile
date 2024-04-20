@@ -8,6 +8,9 @@
 # Debug mode is disabled by default. To build in debug, use `make DEBUG=1`
 DEBUG=
 
+# Graphical debug. Made for debugging graphics.
+GRDBG=
+
 # CXX compiler to use
 CXX = g++
 
@@ -53,12 +56,20 @@ DEPS	   := $(OBJECTS:.o=.d)
 
 OUTPUTMAIN := $(call FIXPATH,$(OUTPUT)/$(MAIN))
 
+# Debug mode is for compiling with debug symbols.
 ifeq ($(DEBUG), 1)
-CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_DEBUG) -DDEBUG
+CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_DEBUG)
 MODESTR := Debug
 else
 CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_RELEASE)
 MODESTR := Release
+endif
+
+# Graphical Debug mode is for compiling with Graphic-Debug.
+# NOTE: You can build with BOTH.
+ifeq ($(GRDBG), 1)
+CXXFLAGS := $(CXXFLAGS) -DDEBUG
+MODESTR  := GraphicDebug
 endif
 
 all: $(OUTPUT) $(MAIN)

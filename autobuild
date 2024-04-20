@@ -1,19 +1,54 @@
 #!/bin/bash
 
-# NOTE: Better to have UPX.
+# NOTE: Better to have UPX if you want to build the lowest possible executable.
 
-set -e +x
+set -e
+
+ADDFLAGS=""
+COMPRESS=1
+
+show_help() {
+    echo "Usage: $0 [OPTION] [ARG]"
+    echo
+    echo "  -h     Show this help message and exit."
+    echo "  -d [X] Build the program in debug mode. If there's any argument given to this flag - build with GraphicDebugging"
+    echo
+    echo "  Note: If no flags are given, the program will be built in release mode."
+    echo
+    exit 0
+}
+
+# To build        Debug - use `./autobuild -d`
+# To build GraphicDebug - use `./autobuild -d X`
+while getopts "h?d" opt; do
+  case $opt in
+    h|\?)
+        show_help
+        exit 0 ;;
+
+    d)  eval nextopt=\${$OPTIND}
+        ADDFLAGS="$ADDFLAGS DEBUG=1"
+        if [[ -n $nextopt && $nextopt != -* ]]; then
+            OPTIND=$((OPTIND + 1))
+            ADDFLAGS="$ADDFLAGS GRDBG=1"
+        fi 
+        COMPRESS=0 ;;
+  esac
+done
 
 # Just build with config in Makefile
-make clean && make
+make clean && make $ADDFLAGS
 
-# Stripping everything that isn't required to launch the app
-strip -x -X -s -R .gnu.version -R .gnu.version_r. output/main
+# Compress if not building Debug.
+if [[ $COMPRESS = 1 ]]; then
+    # Stripping everything that isn't required to launch the app
+    strip -x -X -s -R .gnu.version -R .gnu.version_r. output/main
 
-if command -p which upx; then
-    echo "UPX found, proceeding to compress the binary..."
-    upx --best --compress-icons=3 --ultra-brute output/main
-else
-    echo "UPX not found. Exiting..."
-    exit 0
+    if command -p which upx; then
+        echo "UPX found, proceeding to compress the binary..."
+        upx --best --compress-icons=3 --ultra-brute output/main
+    else
+        echo "UPX not found. Exiting..."
+        exit 0
+    fi
 fi
