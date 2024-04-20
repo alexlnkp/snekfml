@@ -5,6 +5,11 @@
 
 #define GAME_RESOLUTION 20 // 20 pixels per segment. all of the elements should be drawn on the grid of 20x20 pixels
 
+// Note: framerate needed with refreshrate of 125ms is around 8FPS, but SFML behaves strangely if that's the case.
+// The lower the framerate - the longer SFML initializes after creating a window.
+// Also, sf::Event becomes rather laggy and unresponsive with lower framerate. I assume I have to manually lower the framerate instead.
+constexpr uint8_t FRAMERATE = 60;
+
 constexpr uint8_t GRID_X_RESOLUTION = (WINDOW_WIDTH / GAME_RESOLUTION) - 1;
 constexpr uint8_t GRID_Y_RESOLUTION = (WINDOW_HEIGHT / GAME_RESOLUTION) - 1;
 
@@ -28,11 +33,6 @@ struct {
 
 constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
 constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_WIDTH - 4);
-
-// Note: framerate needed with refreshrate of 125ms is around 8FPS, but SFML behaves strangely if that's the case.
-// The lower the framerate - the longer SFML initializes after creating a window.
-// Also, sf::Event becomes rather laggy and unresponsive with lower framerate. I assume I have to manually lower the framerate instead.
-constexpr uint8_t FRAMERATE = 60;
 
 #pragma region Helper Functions and Macros
 
