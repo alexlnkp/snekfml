@@ -3,6 +3,8 @@
 # 'make clean'  removes all .o and executable files
 #
 
+# Note: for smallest filesize use after build: `strip -x -X -s -R .gnu.version -R .gnu.version_r. output/main && upx --best --compress-icons=3 --ultra-brute output/main`
+
 # Debug mode is disabled by default. To build in debug, use `make DEBUG=1`
 DEBUG=
 
@@ -12,7 +14,7 @@ CXX = g++
 LIBRARIES := sfml-graphics
 
 CFLAGS_DEBUG=-Og -g
-CFLAGS_RELEASE=-O3
+CFLAGS_RELEASE=-O3 # Note: using -Oz for low size causes an INCREASE in file size instead. (somehow...)
 
 CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra -Wno-narrowing
 CXXFLAGS_DEBUG := $(CXXFLAGS_COMMON) $(CFLAGS_DEBUG)

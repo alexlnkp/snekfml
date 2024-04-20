@@ -16,11 +16,11 @@ struct Velocity {
 };
 
 struct SnakeSegment {
-    std::pair<uint8_t, uint8_t> position;
+    std::pair<uint8_t, uint8_t> position; // X,Y grid position [0;32]
 };
 
 struct SnakeHead {
-    std::pair<uint8_t, uint8_t> position;
+    std::pair<uint8_t, uint8_t> position; // X,Y grid position [0;32]
     Velocity velocity;
 };
 
@@ -39,7 +39,6 @@ private:
     sf::Event Event;
 
     SnakeHead _Snake_Head = {};
-    sf::RectangleShape Snake_Head;
 
     std::vector<sf::RectangleShape> snake;
 
@@ -51,17 +50,20 @@ public:
 
 private:
     inline void handleEvents();
-    inline void updateGame(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake);
+    inline void updateGame();
     inline void drawGame();
 
     void KeyHandler(sf::Keyboard::Key key, SnakeHead &_Snake_Head);
 
 private:
     inline void DrawSnake();
-    inline void MoveSnake(std::vector<sf::RectangleShape> &snake, uint16_t X, uint16_t Y);
+
+    inline void MoveSnake(sf::RectangleShape &snake, SnakeHead &_Snake_Head);
 
     inline void InitSnakeHead(sf::RectangleShape &Snake_Head);
-    inline void AddSegmentToSnake();
+    inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &snake);
+
+    inline void UpdateSnek(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake);
 };
 
 class Fruit {

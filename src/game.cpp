@@ -53,7 +53,7 @@ int Snek::mainLoop() {
         prevDeltaTime = currentTime;
 
         handleEvents();
-        updateGame(_Snake_Head, snake);
+        updateGame();
         drawGame();
     }
 
@@ -101,27 +101,24 @@ INLINE std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) {
     return {x * GAME_RESOLUTION, y * GAME_RESOLUTION};
 }
 
-INLINE void Snek::updateGame(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake) {
+INLINE void Snek::updateGame() {
     // Update the snake's head position
 
-    if (tenTimer.getElapsedTime().asMilliseconds() >= 500.f) {
-        sf::RectangleShape& head = snake.at(snake.size() - 1);
-        head.move(_Snake_Head.velocity.X, _Snake_Head.velocity.Y);
+    if (tenTimer.getElapsedTime().asMilliseconds() >= 125.f) {
+        UpdateSnek(_Snake_Head, snake);
         tenTimer.restart();
     }
+}
 
-    // // Iterate through the snake segments, excluding the head
-    // for (size_t i = snake.size() - 1; i != 0; --i) {
-    //     sf::RectangleShape& currentSegment = snake.at(i);
-    //     sf::RectangleShape& previousSegment = snake.at(i + 1);
+INLINE void Snek::UpdateSnek(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake) {
+    MoveSnake(snake.back(), _Snake_Head);
 
-    //     currentSegment.setPosition(previousSegment.getPosition());
-    // }
+    if (snake.size() < 2) return;
 
-    // // Update the snake's head position in the snake segments list
-    // snake.at(snake.size() - 1).setPosition(head.getPosition().x * GAME_RESOLUTION, head.getPosition().y * GAME_RESOLUTION);
-
-    
+    // Iterate through the snake segments, excluding the head
+    for (size_t i = snake.size() - 2; i != 0; --i) {
+        snake.at(i).setPosition(snake.at(i + 1).getPosition());
+    }
 }
 
 INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head) {
@@ -137,11 +134,11 @@ INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head) {
     snake.push_back(Snake_Head);
 }
 
-INLINE void Snek::MoveSnake(std::vector<sf::RectangleShape> &snake, uint16_t X, uint16_t Y) {
-    
+INLINE void Snek::MoveSnake(sf::RectangleShape &snake, SnakeHead &_Snake_Head) {
+    snake.move(_Snake_Head.velocity.X, _Snake_Head.velocity.Y);
 }
 
-INLINE void Snek::AddSegmentToSnake() {
+INLINE void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &snake) {
     sf::RectangleShape snakeSeg({SNAKE_SEGMENT_WIDTH, SNAKE_SEGMENT_HEIGHT});
     snakeSeg.setOrigin({SNAKE_SEGMENT_WIDTH + 4, SNAKE_SEGMENT_HEIGHT + 4});
     snakeSeg.setFillColor(WHITE);
