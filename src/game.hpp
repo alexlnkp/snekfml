@@ -7,8 +7,8 @@
 
 #define GAME_RESOLUTION 20 // 20 pixels per segment. all of the elements should be drawn on the grid of 20x20 pixels
 
-constexpr uint8_t GRID_X_RESOLUTION = (WINDOW_WIDTH / GAME_RESOLUTION);
-constexpr uint8_t GRID_Y_RESOLUTION = (WINDOW_HEIGHT / GAME_RESOLUTION);
+constexpr uint8_t GRID_X_RESOLUTION = (WINDOW_WIDTH / GAME_RESOLUTION) - 1;
+constexpr uint8_t GRID_Y_RESOLUTION = (WINDOW_HEIGHT / GAME_RESOLUTION) - 1;
 
 struct Velocity {
     int8_t X;
@@ -43,7 +43,7 @@ private:
     std::vector<sf::RectangleShape> snake;
 
 public:
-    Snek();
+    Snek(int_least64_t seed);
     ~Snek();
 
     int mainLoop();
@@ -69,17 +69,16 @@ private:
 class Fruit {
 private:
     uint8_t posX, posY;
+    static Fruit* instance;
 
 public:
     Fruit();
     ~Fruit();
-    inline uint8_t GetFruitPosition();
-
-private:
-    inline void InitFruit();
-    inline uint8_t CreateRandomPosition();
+    static Fruit* GetFruitInstance();
+    inline std::pair<uint8_t, uint8_t> GetFruitPosition() const;
 
 };
+
 
 inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);
 

@@ -22,6 +22,7 @@ struct {
 #define WHITE Colors.White
 
 // Here's how the grid should look like at the current params (each [ ] is 20x20 px in size) 1:8 scale
+// NOTE: THERE ARE NO EMPTY SPACES BETWEEN THE CELLS OF THE GRID, THOSE ARE FOR EASIER UNDERSTANDING.
 // [ ] [ ] [ ] [ ]
 // [ ] [ ] [ ] [ ]
 // [ ] [ ] [ ] [ ]
@@ -33,9 +34,13 @@ struct {
 constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
 constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_WIDTH - 4);
 
+// Note: framerate needed with refreshrate of 125ms is around 8FPS, but SFML behaves strangely if that's the case.
+// The lower the framerate - the longer SFML initializes after creating a window.
+// Also, sf::Event becomes rather laggy and unresponsive with lower framerate. I assume I have to manually lower the framerate instead.
 constexpr uint8_t FRAMERATE = 60;
 
-Snek::Snek() {
+Snek::Snek(int_least64_t seed) {
+    srand(seed);
     mWindow.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Snake");
     mWindow.setFramerateLimit(FRAMERATE);
     sf::RectangleShape Snake_Head({SNAKE_HEAD_WIDTH, SNAKE_HEAD_HEIGHT});
@@ -102,10 +107,10 @@ INLINE std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) {
 }
 
 INLINE void Snek::updateGame() {
-    // Update the snake's head position
-
     if (tenTimer.getElapsedTime().asMilliseconds() >= 125.f) {
         UpdateSnek(_Snake_Head, snake);
+        Fruit NewFruit = *Fruit::GetFruitInstance();
+        printf("X%d\nY%d\n", NewFruit.GetFruitPosition().first, NewFruit.GetFruitPosition().second);
         tenTimer.restart();
     }
 }
@@ -128,8 +133,8 @@ INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head) {
 
     _Snake_Head.velocity.X = 0;
     _Snake_Head.velocity.Y = 0;
-    _Snake_Head.position.first = 15;
-    _Snake_Head.position.second = 15;
+    _Snake_Head.position.first = GRID_X_RESOLUTION >> 1;
+    _Snake_Head.position.second = GRID_X_RESOLUTION >> 1;
 
     snake.push_back(Snake_Head);
 }
@@ -163,3 +168,28 @@ INLINE void Snek::drawGame() {
     
     mWindow.display();
 }
+
+#pragma region Fruit
+
+Fruit* Fruit::instance = nullptr;
+
+Fruit::Fruit() {
+    posX = rand() % GRID_X_RESOLUTION;
+    posY = rand() % GRID_Y_RESOLUTION;
+}
+
+Fruit::~Fruit() {
+
+}
+
+Fruit* Fruit::GetFruitInstance() {
+    instance = (!instance) ? new Fruit() : instance;
+
+    return instance;
+}
+
+INLINE std::pair<uint8_t, uint8_t> Fruit::GetFruitPosition() const {
+    return { posX, posY };
+}
+
+#pragma endregion
