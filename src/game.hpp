@@ -1,15 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-
-#define WINDOW_WIDTH  640
-#define WINDOW_HEIGHT 640
-
-#define GAME_RESOLUTION 20 // 20 pixels per segment. all of the elements should be drawn on the grid of 20x20 pixels
-
-constexpr uint8_t GRID_X_RESOLUTION = (WINDOW_WIDTH / GAME_RESOLUTION) - 1;
-constexpr uint8_t GRID_Y_RESOLUTION = (WINDOW_HEIGHT / GAME_RESOLUTION) - 1;
-
+#include "gameconfig.h"
 struct Velocity {
     int8_t X;
     int8_t Y;

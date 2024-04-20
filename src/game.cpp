@@ -1,43 +1,8 @@
-
-extern "C" {
-    #include <unistd.h>
-}
-
-#include "game.hpp"
-
+#include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <random>
 
-// A hack so the compiler trusts me for once
-#define INLINE __attribute__((always_inline)) inline
-
-#define PRINT(ARG) write(STDOUT_FILENO, ARG, sizeof(ARG))
-
-struct {
-    sf::Color White = {255, 255, 255};
-    sf::Color Green = {0, 255, 0};
-} Colors;
-
-#define GREEN Colors.Green
-#define WHITE Colors.White
-
-// Here's how the grid should look like at the current params (each [ ] is 20x20 px in size) 1:8 scale
-// NOTE: THERE ARE NO EMPTY SPACES BETWEEN THE CELLS OF THE GRID, THOSE ARE FOR EASIER UNDERSTANDING.
-// [ ] [ ] [ ] [ ]
-// [ ] [ ] [ ] [ ]
-// [ ] [ ] [ ] [ ]
-// [ ] [ ] [ ] [ ]
-
-#define SNAKE_HEAD_WIDTH  GRID_X_RESOLUTION
-#define SNAKE_HEAD_HEIGHT GRID_Y_RESOLUTION
-
-constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
-constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_WIDTH - 4);
-
-// Note: framerate needed with refreshrate of 125ms is around 8FPS, but SFML behaves strangely if that's the case.
-// The lower the framerate - the longer SFML initializes after creating a window.
-// Also, sf::Event becomes rather laggy and unresponsive with lower framerate. I assume I have to manually lower the framerate instead.
-constexpr uint8_t FRAMERATE = 60;
+#include "game.hpp"
 
 Snek::Snek(int_least64_t seed) {
     srand(seed);
