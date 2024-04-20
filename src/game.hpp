@@ -75,7 +75,7 @@ inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);
 
 #pragma region Debug
 
-#ifdef DEBUG
+#ifdef GRAPHIC_DEBUG
 __attribute__((always_inline))
 inline void DrawDebugGrid(sf::RenderWindow &mWindow) {
     for (int i = 0; i < GRID_X_RESOLUTION + 1; i++) {

@@ -127,7 +127,7 @@ INLINE void Snek::DrawSnake() {
 INLINE void Snek::drawGame() {
     mWindow.clear();
 
-#ifdef DEBUG
+#ifdef GRAPHIC_DEBUG
     DrawDebugGrid(mWindow);
 #endif
 

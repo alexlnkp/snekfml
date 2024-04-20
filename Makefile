@@ -68,7 +68,7 @@ endif
 # Graphical Debug mode is for compiling with Graphic-Debug.
 # NOTE: You can build with BOTH.
 ifeq ($(GRDBG), 1)
-CXXFLAGS := $(CXXFLAGS) -DDEBUG
+CXXFLAGS := $(CXXFLAGS) -DGRAPHIC_DEBUG
 MODESTR  := GraphicDebug
 endif
 
