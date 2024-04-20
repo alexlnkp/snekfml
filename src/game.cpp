@@ -18,10 +18,6 @@ Snek::~Snek() {
 
 int Snek::mainLoop() {
     while (mWindow.isOpen()) {
-        currentTime = deltaClock.getElapsedTime();
-        deltaTime = ( currentTime - prevDeltaTime );
-        prevDeltaTime = currentTime;
-
         handleEvents();
         updateGame();
         drawGame();
@@ -30,14 +26,14 @@ int Snek::mainLoop() {
     return 0;
 }
 
-void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead &_Snake_Head) {
+void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) {
     switch(key) {
 
-    case sf::Keyboard::Up:    _Snake_Head.velocity.Y = -GAME_RESOLUTION; _Snake_Head.velocity.X =   0; break;
-    case sf::Keyboard::Down:  _Snake_Head.velocity.Y =  GAME_RESOLUTION; _Snake_Head.velocity.X =   0; break;
+    case sf::Keyboard::Up:    _Snake_Head_S.velocity.Y = -GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
+    case sf::Keyboard::Down:  _Snake_Head_S.velocity.Y =  GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
 
-    case sf::Keyboard::Left:  _Snake_Head.velocity.X = -GAME_RESOLUTION; _Snake_Head.velocity.Y =   0; break;
-    case sf::Keyboard::Right: _Snake_Head.velocity.X =  GAME_RESOLUTION; _Snake_Head.velocity.Y =   0; break; 
+    case sf::Keyboard::Left:  _Snake_Head_S.velocity.X = -GAME_RESOLUTION; _Snake_Head_S.velocity.Y =   0; break;
+    case sf::Keyboard::Right: _Snake_Head_S.velocity.X =  GAME_RESOLUTION; _Snake_Head_S.velocity.Y =   0; break; 
         
     default: break;
     }
@@ -47,7 +43,7 @@ INLINE void Snek::handleEvents() {
     while (mWindow.pollEvent(Event)) {
         switch (Event.type) {
         case sf::Event::Closed: mWindow.close(); goto exit_loop;
-        case sf::Event::KeyPressed: KeyHandler(Event.key.code, _Snake_Head); goto exit_loop;
+        case sf::Event::KeyPressed: KeyHandler(Event.key.code, _Snake_Head_S); goto exit_loop;
         default: goto exit_loop; // could just be a break; instead, not sure
         }
     }
@@ -72,75 +68,74 @@ INLINE std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) {
 }
 
 INLINE void Snek::updateGame() {
-    if (tenTimer.getElapsedTime().asMilliseconds() >= 125.f) {
-        UpdateSnek(_Snake_Head, snake);
+    if (T_Updater.getElapsedTime().asMilliseconds() >= 125.f) {
+        UpdateSnek(_Snake_Head_S, SnakeTail);
         SetFruitInstance(Fruit::GetFruitInstance());
-        _fruit_rect = *fruit_instance->GetFruitRect();
-        tenTimer.restart();
+        P_FruitRect = *PTR_FruitInstance->GetFruitRect();
+        T_Updater.restart();
     }
 }
 
-INLINE void Snek::UpdateSnek(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake) {
-    MoveSnake(snake.back(), _Snake_Head);
-    FruitCollision(snake);
+INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) {
+    MoveSnake(SnakeTail.back(), _Snake_Head_S);
+    FruitCollision(SnakeTail);
 
-    if (snake.size() > 1) {
-        // Iterate through the snake segments, excluding the head
-        for (size_t i = snake.size() - 2; i > 0; i--) {
-            snake.at(i).setPosition(snake.at(i + 1).getPosition());
+    if (SnakeTail.size() > 1) {
+        // Iterate through the SnakeTail segments, excluding the head
+        for (size_t i = SnakeTail.size() - 2; i > 0; i--) {
+            SnakeTail.at(i).setPosition(SnakeTail.at(i + 1).getPosition());
         }
     }
 
 }
 
-INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &snake) {
-    if (fruit_instance == nullptr) return;
+INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail) {
+    if (PTR_FruitInstance == nullptr) return;
 
-    if (_Snake_Head.position == fruit_instance->GetFruitPosition()) {
+    if (_Snake_Head_S.position == PTR_FruitInstance->GetFruitPosition()) {
         printf("NOMNOMNOM\n");
-        fruit_instance->GenerateNewFruitPosition();
+        PTR_FruitInstance->GenerateNewFruitPosition();
         
-        AddSegmentToSnake(snake);
+        AddSegmentToSnake(SnakeTail);
     }
 }
 
 INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head) {
-    auto MidPos = GetGridPos(15, 15);
-    Snake_Head.setPosition(MidPos.first, MidPos.second);
+    Snake_Head.setPosition(GRID_MID_POS_X * GAME_RESOLUTION, GRID_MID_POS_Y * GAME_RESOLUTION);
     Snake_Head.setFillColor(WHITE);
 
-    _Snake_Head.velocity.X = 0;
-    _Snake_Head.velocity.Y = 0;
-    _Snake_Head.position.first = (GRID_X_RESOLUTION >> 1) - 1;
-    _Snake_Head.position.second = (GRID_Y_RESOLUTION >> 1) - 1;
+    _Snake_Head_S.velocity.X = 0;
+    _Snake_Head_S.velocity.Y = 0;
+    _Snake_Head_S.position.first = GRID_MID_POS_X;
+    _Snake_Head_S.position.second = GRID_MID_POS_Y;
 
-    snake.push_back(Snake_Head);
+    SnakeTail.push_back(Snake_Head);
 }
 
-INLINE void Snek::MoveSnake(sf::RectangleShape &snake, SnakeHead &_Snake_Head) {
-    int8_t velX = _Snake_Head.velocity.X;
-    int8_t velY = _Snake_Head.velocity.Y;
+INLINE void Snek::MoveSnake(sf::RectangleShape &SnakeTail, SnakeHead_S &_Snake_Head_S) {
+    int8_t velX = _Snake_Head_S.velocity.X;
+    int8_t velY = _Snake_Head_S.velocity.Y;
 
-    PrevSnakeHeadPosition.first  = snake.getPosition().x;
-    PrevSnakeHeadPosition.second = snake.getPosition().y;
+    PrevSnakeHeadPosition.first  = SnakeTail.getPosition().x;
+    PrevSnakeHeadPosition.second = SnakeTail.getPosition().y;
 
-    snake.move(velX, velY);
+    SnakeTail.move(velX, velY);
 
-    _Snake_Head.position.first  += SIGN(velX);
-    _Snake_Head.position.second += SIGN(velY);
+    _Snake_Head_S.position.first  += SIGN(velX);
+    _Snake_Head_S.position.second += SIGN(velY);
 }
 
-INLINE void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &snake) {
+INLINE void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) {
     sf::RectangleShape snakeSeg({SNAKE_SEGMENT_WIDTH, SNAKE_SEGMENT_HEIGHT});
     snakeSeg.setOrigin(SNAKE_SEGMENT_ANCHOR.first, SNAKE_SEGMENT_ANCHOR.second);
     snakeSeg.setPosition(PrevSnakeHeadPosition.first, PrevSnakeHeadPosition.second);
     snakeSeg.setFillColor(WHITE);
 
-    snake.insert(snake.begin(), snakeSeg);
+    SnakeTail.insert(SnakeTail.begin(), snakeSeg);
 }
 
 INLINE void Snek::DrawSnake() {
-    for (sf::RectangleShape snakeSeg : snake) {
+    for (sf::RectangleShape snakeSeg : SnakeTail) {
         mWindow.draw(snakeSeg);
     }
 }
@@ -151,7 +146,7 @@ INLINE void Snek::drawGame() {
     GRDEBUG(DrawDebugGrid(mWindow))
 
     // This alone made me suffer more than the whole project so far.
-    Fruit::DrawFruit(mWindow, _fruit_rect);
+    Fruit::DrawFruit(mWindow, P_FruitRect);
     
     Snek::DrawSnake();
 
@@ -160,27 +155,31 @@ INLINE void Snek::drawGame() {
 
 #pragma region Fruit
 
-Fruit* Fruit::instance = nullptr;
+Fruit* Fruit::S_PTR_FruitInstanceOrigin = nullptr;
 
 INLINE sf::RectangleShape* Fruit::GetFruitRect() {
-    return &fruit_rect;
+    return &F_FruitRect;
 }
 
-INLINE void Fruit::GenerateNewFruitPosition() {
-    posX = rand() % (GRID_X_RESOLUTION - 1);
-    posY = rand() % (GRID_Y_RESOLUTION - 1);
-    auto GridPosFruit = GetGridPos(posX, posY);
-    fruit_rect.setPosition(GridPosFruit.first, GridPosFruit.second);
+void Fruit::GenerateNewFruitPosition() {
+    F_PosX = rand() % (GRID_X_RESOLUTION - 2) + 1;
+    F_PosY = rand() % (GRID_Y_RESOLUTION - 2) + 1;
+
+    // Failsafe so the fruit can't spawn in the dead middle
+    if (F_PosX == GRID_MID_POS_X && F_PosY == GRID_MID_POS_Y) this->GenerateNewFruitPosition();
+
+    auto GridPosFruit = GetGridPos(F_PosX, F_PosY);
+    F_FruitRect.setPosition(GridPosFruit.first, GridPosFruit.second);
 }
 
 Fruit::Fruit() {
     GRDEBUG(printf("A fruit is initialised at "))
-    GRDEBUG(printf("[X%d; Y%d]\n", posX, posY))
+    GRDEBUG(printf("[X%d; Y%d]\n", F_PosX, F_PosY))
 
-    fruit_rect = sf::RectangleShape({FRUIT_WIDTH, FRUIT_HEIGHT});
-    fruit_rect.setFillColor(GREEN);
+    F_FruitRect = sf::RectangleShape({FRUIT_WIDTH, FRUIT_HEIGHT});
+    F_FruitRect.setFillColor(GREEN);
     
-    fruit_rect.setOrigin(FRUIT_ANCHOR.first, FRUIT_ANCHOR.second);
+    F_FruitRect.setOrigin(FRUIT_ANCHOR.first, FRUIT_ANCHOR.second);
 
     GenerateNewFruitPosition();
 }
@@ -190,21 +189,21 @@ Fruit::~Fruit() {
 }
 
 INLINE void Snek::SetFruitInstance(Fruit* fruit) {
-    fruit_instance = fruit;
+    PTR_FruitInstance = fruit;
 }
 
-INLINE void Fruit::DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape fruit_rect) {
-    mWindow.draw(fruit_rect);
+INLINE void Fruit::DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) {
+    mWindow.draw(F_FruitRect);
 }
 
 Fruit* Fruit::GetFruitInstance() {
-    instance = (instance == nullptr) ? new Fruit() : instance;
-    return instance;
+    S_PTR_FruitInstanceOrigin = (S_PTR_FruitInstanceOrigin == nullptr) ? new Fruit() : S_PTR_FruitInstanceOrigin;
+    return S_PTR_FruitInstanceOrigin;
 }
 
 // Return the GRID POSITION X=[0;32], Y=[0;32]
 INLINE std::pair<uint8_t, uint8_t> Fruit::GetFruitPosition() const {
-    return std::make_pair<uint8_t, uint8_t>(posX - 1, posY - 1);
+    return std::make_pair<uint8_t, uint8_t>(F_PosX - 1, F_PosY - 1);
 }
 
 #pragma endregion

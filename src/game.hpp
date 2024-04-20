@@ -10,16 +10,16 @@ struct SnakeSegment {
     std::pair<uint8_t, uint8_t> position; // X,Y grid position [0;32]
 };
 
-struct SnakeHead {
+struct SnakeHead_S {
     std::pair<uint8_t, uint8_t> position; // X,Y grid position [0;32]
     Velocity velocity;
 };
 
 class Fruit {
 private:
-    uint8_t posX, posY;
-    static Fruit* instance;
-    sf::RectangleShape fruit_rect;
+    uint8_t F_PosX, F_PosY;
+    static Fruit* S_PTR_FruitInstanceOrigin;
+    sf::RectangleShape F_FruitRect;
 
     // A hack so that Fruit can only be initialised by `Fruit X = Fruit::GetFruitInstance();`
     // This way, there is NO way that there can be multiple fruits at the same time.
@@ -28,8 +28,8 @@ private:
 public:
     ~Fruit();
     static Fruit* GetFruitInstance();
-    inline static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape fruit_rect);
-    inline void GenerateNewFruitPosition();
+    inline static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect);
+    void GenerateNewFruitPosition();
     inline std::pair<uint8_t, uint8_t> GetFruitPosition() const;
 
     inline sf::RectangleShape* GetFruitRect();
@@ -37,26 +37,19 @@ public:
 
 class Snek {
 private:
-    sf::Time currentTime;
-    sf::Time prevDeltaTime;
-    sf::Time deltaTime;
-
-    sf::Clock deltaClock;
-
-    sf::Time tenTime;
-    sf::Clock tenTimer;
+    sf::Clock T_Updater;
 
     sf::RenderWindow mWindow;
     sf::Event Event;
 
-    Fruit* fruit_instance;
-    sf::RectangleShape _fruit_rect;
+    Fruit* PTR_FruitInstance;
+    sf::RectangleShape P_FruitRect;
 
-    SnakeHead _Snake_Head = {};
+    SnakeHead_S _Snake_Head_S = {};
 
     std::pair<uint16_t, uint16_t> PrevSnakeHeadPosition;
 
-    std::vector<sf::RectangleShape> snake;
+    std::vector<sf::RectangleShape> SnakeTail;
 
 public:
     Snek(int_least64_t seed);
@@ -69,20 +62,20 @@ private:
     inline void updateGame();
     inline void drawGame();
 
-    void KeyHandler(sf::Keyboard::Key key, SnakeHead &_Snake_Head);
+    void KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S);
 
 private:
     inline void DrawSnake();
 
-    inline void MoveSnake(sf::RectangleShape &snake, SnakeHead &_Snake_Head);
+    inline void MoveSnake(sf::RectangleShape &SnakeTail, SnakeHead_S &_Snake_Head_S);
 
     inline void InitSnakeHead(sf::RectangleShape &Snake_Head);
-    inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &snake);
+    inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail);
 
-    inline void UpdateSnek(SnakeHead &_Snake_Head, std::vector<sf::RectangleShape> &snake);
+    inline void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail);
 
     inline void SetFruitInstance(Fruit* fruit);
-    inline void FruitCollision(std::vector<sf::RectangleShape> &snake);
+    inline void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail);
 };
 
 inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);

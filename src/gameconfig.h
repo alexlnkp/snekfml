@@ -35,6 +35,9 @@ constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
 constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_HEIGHT - 4);
 constexpr std::pair<int8_t, int8_t> SNAKE_SEGMENT_ANCHOR = std::make_pair(-1, -1);
 
+constexpr uint8_t GRID_MID_POS_X = ((GRID_X_RESOLUTION >> 1) - 1);
+constexpr uint8_t GRID_MID_POS_Y = ((GRID_Y_RESOLUTION >> 1) - 1);
+
 constexpr uint8_t FRUIT_WIDTH  = (SNAKE_HEAD_WIDTH - 12);
 constexpr uint8_t FRUIT_HEIGHT = (SNAKE_HEAD_HEIGHT - 12);
 constexpr std::pair<int8_t, int8_t> FRUIT_ANCHOR = std::make_pair(15, 15);
