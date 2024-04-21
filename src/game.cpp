@@ -78,17 +78,16 @@ INLINE void Snek::updateGame() {
 
 INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) {
     MoveSnake(Snake_Head, _Snake_Head_S);
+
     FruitCollision(SnakeTail);
-
-    if (SnakeTail.size() > 1) {
-
-        for (size_t i = SnakeTail.size() - 2; i > 0; --i) {
-            SnakeTail.at(i + 1).setPosition(SnakeTail.at(i).getPosition());
-            SnakeTail.at(i).setPosition(PrevSnakeHeadPosition.first, PrevSnakeHeadPosition.second);
-            
-        }
+    
+    uint16_t i = 0;
+    while (i < SnakeTail.size()) {
+        // Terrible hack. Need fixing ASAP
+        if (i >= 1) SnakeTail.at(i - 1).setPosition(SnakeTail.at(i).getPosition());
+        SnakeTail.at(i).setPosition(PrevSnakeHeadPosition.first, PrevSnakeHeadPosition.second);
+        i++;
     }
-
 }
 
 INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail) {
