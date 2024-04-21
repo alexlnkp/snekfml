@@ -3,6 +3,18 @@
 ### A quickly hacked together attempt at making lowest size executable possible for a simple snake game on SFML
 Decided to make this to introduce myself to SFML. As it turns out - nothing is quite pleasant whenever you try to fight back against the compiler.
 
+## Dependencies
+    You'll need to install sfml. That's it.
+    Use your favorite package manager to do so.
+
+    Examples on different distros:
+- Arch:
+    `pacman -Syu sfml`
+- Ubuntu:
+    `apt-get install libsfml-dev`
+
+On Windows... Uhh... I'm not sure to be entirely honest. You'll probably have to manually link everything... Sorry
+
 ## Build
 Easy. Use `autobuild` script.
 ```
