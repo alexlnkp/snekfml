@@ -1,3 +1,5 @@
+[![C/C++ CI](https://github.com/alexlnkp/snekfml/actions/workflows/c-cpp.yml/badge.svg?branch=main)](https://github.com/alexlnkp/snekfml/actions/workflows/c-cpp.yml) <sub>...somehow</sub>
+
 # **snek**-fml
 
 ### A quickly hacked together attempt at making lowest size executable possible for a simple snake game on SFML
