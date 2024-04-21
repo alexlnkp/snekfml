@@ -3,7 +3,7 @@
 *.dwo
 
 .vscode
-output
+output/main
 
 # Compiled Object files
 *.slo

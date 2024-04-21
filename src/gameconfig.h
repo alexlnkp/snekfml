@@ -31,6 +31,11 @@ struct {
 #define SNAKE_HEAD_WIDTH  GRID_X_RESOLUTION
 #define SNAKE_HEAD_HEIGHT GRID_Y_RESOLUTION
 
+#define FRUIT_POINTS_WORTH 10
+
+#define FONT_FILE_PATH "assets/Angerpoise Lampshade.otf"
+constexpr uint8_t FONT_SIZE = (GAME_RESOLUTION + 12);
+
 constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
 constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_HEIGHT - 4);
 constexpr std::pair<int8_t, int8_t> SNAKE_SEGMENT_ANCHOR = std::make_pair(-1, -1);

@@ -1,6 +1,10 @@
 #pragma once
 
 #include "gameconfig.h"
+
+// A enum that contains the current state of the game
+enum GameState : uint8_t { Menu, Game, Pause, GameOver };
+
 struct Velocity {
     int8_t X;
     int8_t Y;
@@ -53,6 +57,13 @@ private:
     sf::RectangleShape Snake_Head;
     std::vector<sf::RectangleShape> SnakeTail;
 
+    GameState CurrentGameState = Game;
+
+    sf::Font MyFont;
+    sf::Text Text;
+
+    uint_least64_t Score = 0;
+
 public:
     Snek(int_least64_t seed) noexcept;
     ~Snek();
@@ -77,7 +88,10 @@ private:
     inline void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 
     inline void SetFruitInstance(Fruit* fruit) noexcept;
-    inline void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail) noexcept;
+    inline void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept;
+    inline void TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
+
+    inline void UpdateScore() noexcept;
 };
 
 inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) noexcept;

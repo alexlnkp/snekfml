@@ -41,9 +41,10 @@ Usage: ./autobuild [OPTION] [ARG]
 
 ## Current state
 I will probably forget to update this README afterwards, so here's the state at the moment of creating the README:
-- Snake's head doesn't handle collision with its tail yet.
 - No boundaries! You can fly free straight to the [**65'535** ; **65'535**] coordinates.
 - No quick-succesion presses.
 - No "grace" period when you're about to hit your own tail.
-- No HighScore system.
 - No pause button.
+
+# Credit
+Font **Angerpoise Lampshade** - TYPODERMIC FONTS INC.

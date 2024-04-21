@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <random>
-
+#include <iomanip>
 #include "game.hpp"
 
 Snek::Snek(int_least64_t seed) noexcept {
@@ -10,6 +10,22 @@ Snek::Snek(int_least64_t seed) noexcept {
     mWindow.setFramerateLimit(FRAMERATE);
     Snake_Head.setSize({SNAKE_HEAD_WIDTH, SNAKE_HEAD_HEIGHT});
     InitSnakeHead(Snake_Head, _Snake_Head_S);
+
+    // God bless public domain fonts
+    if (!MyFont.loadFromFile(FONT_FILE_PATH)) {
+        exit(-1);
+        return;
+    }
+    
+    Text.setFont(MyFont);
+    Text.setCharacterSize(FONT_SIZE);
+    Text.setLetterSpacing(2.f);
+    Text.setPosition(5, WINDOW_HEIGHT - FONT_SIZE - 5);
+
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(7) << Score;
+    Text.setString(ss.str());
+
 }
 
 Snek::~Snek() {
@@ -37,6 +53,12 @@ void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcep
         
     default: break;
     }
+}
+
+INLINE void Snek::UpdateScore() noexcept {
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(7) << Score;
+    Text.setString(ss.str());
 }
 
 INLINE void Snek::handleEvents() noexcept {
@@ -85,9 +107,12 @@ INLINE void Snek::updateGame() noexcept {
  * @throws None
  */
 INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
-    MoveSnake(Snake_Head, _Snake_Head_S);
+    if ((CurrentGameState == GameOver) | (CurrentGameState == Pause)) return;
 
-    FruitCollision(SnakeTail);
+    MoveSnake(Snake_Head, _Snake_Head_S);
+    TailCollision(Snake_Head, SnakeTail);
+
+    FruitCollision(SnakeTail, Score);
     
     for (uint16_t i = 1; i < SnakeTail.size(); i++) {
         SnakeTail.at(i - 1).setPosition(SnakeTail.at(i).getPosition());
@@ -105,7 +130,7 @@ INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::Rectang
  *
  * @throws None
  */
-INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail) noexcept {
+INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept {
     if (PTR_FruitInstance == nullptr) return;
 
     // For some reason without this check a segfault is guaranteed...
@@ -113,9 +138,20 @@ INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail) noe
     if (_Snake_Head_S.velocity.X | _Snake_Head_S.velocity.Y) {
         if (_Snake_Head_S.position == PTR_FruitInstance->GetFruitPosition()) {
             GRDEBUG(printf("NOMNOMNOM\n"))
+            Score += FRUIT_POINTS_WORTH;
+            UpdateScore();
             PTR_FruitInstance->GenerateNewFruitPosition();
             
             AddSegmentToSnake(SnakeTail);
+        }
+    }
+}
+
+INLINE void Snek::TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
+    for (uint16_t i = 1; i < SnakeTail.size(); i++) {
+        if (Snake_Head.getPosition() == SnakeTail.at(i).getPosition()) {
+            GRDEBUG(printf("GAME OVER\n"))
+            CurrentGameState = GameOver;
         }
     }
 }
@@ -183,6 +219,8 @@ INLINE void Snek::drawGame() noexcept {
     Fruit::DrawFruit(mWindow, P_FruitRect);
     
     Snek::DrawSnake(mWindow);
+
+    mWindow.draw(Text);
 
     mWindow.display();
 }
