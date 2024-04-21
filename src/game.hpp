@@ -24,16 +24,16 @@ private:
 
     // A hack so that Fruit can only be initialised by `Fruit X = Fruit::GetFruitInstance();`
     // This way, there is NO way that there can be multiple fruits at the same time.
-    Fruit();
+    Fruit() noexcept;
 
 public:
     ~Fruit();
-    static Fruit* GetFruitInstance();
-    inline static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect);
-    void GenerateNewFruitPosition();
-    inline std::pair<uint8_t, uint8_t> GetFruitPosition() const;
+    static Fruit* GetFruitInstance() noexcept;
+    inline static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) noexcept;
+    void GenerateNewFruitPosition() noexcept;
+    inline std::pair<uint8_t, uint8_t> GetFruitPosition() const noexcept;
 
-    inline sf::RectangleShape* GetFruitRect();
+    inline sf::RectangleShape* GetFruitRect() noexcept;
 };
 
 class Snek {
@@ -54,39 +54,39 @@ private:
     std::vector<sf::RectangleShape> SnakeTail;
 
 public:
-    Snek(int_least64_t seed);
+    Snek(int_least64_t seed) noexcept;
     ~Snek();
 
-    int mainLoop();
+    int mainLoop() noexcept;
 
 private:
-    inline void handleEvents();
-    inline void updateGame();
-    inline void drawGame();
+    inline void handleEvents() noexcept;
+    inline void updateGame() noexcept;
+    inline void drawGame() noexcept;
 
-    void KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S);
+    void KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcept;
 
 private:
-    inline void DrawSnake();
+    inline void DrawSnake(sf::RenderWindow &mWindow) const noexcept;
 
-    inline void MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S);
+    inline void MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
 
-    inline void InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S);
-    inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail);
+    inline void InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
+    inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) const noexcept;
 
-    inline void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail);
+    inline void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 
-    inline void SetFruitInstance(Fruit* fruit);
-    inline void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail);
+    inline void SetFruitInstance(Fruit* fruit) noexcept;
+    inline void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 };
 
-inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y);
+inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) noexcept;
 
 #pragma region Debug
 
 GRDEBUG(
     __attribute__((always_inline))
-    inline void DrawDebugGrid(sf::RenderWindow &mWindow) {
+    inline void DrawDebugGrid(sf::RenderWindow &mWindow) noexcept {
         for (int i = 0; i < GRID_X_RESOLUTION; i++) {
             for (int j = 0; j < GRID_Y_RESOLUTION; j++) {
                 sf::RectangleShape grSeg({10, 10});

@@ -16,7 +16,7 @@ CXX = g++
 
 LIBRARIES := sfml-graphics
 
-CFLAGS_DEBUG=-O3 -g
+CFLAGS_DEBUG=-Og -g
 CFLAGS_RELEASE=-O3 -fno-gcse # Note: using -Oz for low size causes an INCREASE in file size instead. (somehow...)
 
 CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra
@@ -58,7 +58,7 @@ OUTPUTMAIN := $(call FIXPATH,$(OUTPUT)/$(MAIN))
 
 # Debug mode is for compiling with debug symbols.
 ifeq ($(DEBUG), 1)
-CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_DEBUG)
+CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_DEBUG) -gsplit-dwarf
 MODESTR := Debug
 else
 CXXFLAGS:=$(CXXFLAGS) $(CXXFLAGS_RELEASE)
