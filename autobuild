@@ -10,15 +10,17 @@ COMPRESS=1
 show_help() {
 	echo "Usage: $0 [OPTION] [ARG]"
 	echo
-	echo "      Common flags:"
+	echo "       Common flags:"
 	echo
-	echo "  -h, --help             Show this help message and exit."
-	echo "  -d, --debug [X]        Build the program in debug mode. If there's any argument given to this flag - build with GraphicDebugging"
+	echo "  -h,  --help              Show this help message and exit."
+	echo "  -d,  --debug             Build the program in debug mode."
 	echo
-	echo "      Compression settings:"
+	echo "  -gd, --graphical-debug   Build the program with GraphicDebugging"
 	echo
-	echo "  -n, --nocompression    [OVERRIDE] - Don't apply any additional compression to compiled executable"
-	echo "  -f, --forcecompression [OVERRIDE] - Force compression on compiled executable"
+	echo "       OVERRIDE flags:"
+	echo
+	echo "  -n,  --no-compression    Don't apply any additional compression to compiled executable"
+	echo "  -f,  --force-compression Force compression on compiled executable"
 	echo
 	echo "  Note: If no flags are given, the program will be built in release mode with extra compression afterwards."
 	echo
@@ -27,35 +29,37 @@ show_help() {
 
 # To build        Debug - use `./autobuild -d`
 # To build GraphicDebug - use `./autobuild -d X`
-while [[ $# -gt 0 ]]; do
-	case $1 in
-		-d|--debug) 
-			if [[ -n $2 ]]; then
-				ADDFLAGS="$ADDFLAGS DEBUG=1 GRDBG=1"
-				shift
-			else
-				ADDFLAGS="$ADDFLAGS DEBUG=1"
-			fi
+for arg in "$@"; do
+    case $arg in
+        -d|--debug) 
+            ADDFLAGS="$ADDFLAGS DEBUG=1"
+            COMPRESS=0 ;;
+
+		-gd|--graphical-debug)
+			ADDFLAGS="$ADDFLAGS DEBUG=1 GRDBG=1"
 			COMPRESS=0 ;;
 
-		-h|--help)
-			show_help
-			exit 0 ;;
-		
-		-n|--nocompression)
-			echo Will not compress compiled executable.
-			COMPRESS=0 ;;
+        -h|--help)
+            show_help
+            exit 0 ;;
+        
+        -n|--no-compression)
+            echo Will not compress compiled executable.
+            COMPRESS=0 ;;
 
-		-*|--*)
-      echo "Unknown option $1"
-			show_help
-      exit 1
-      ;;
+		-f|--force-compression)
+			echo Will force compression on compiled executable
+			COMPRESS=1 ;;
 
-		*)
-			break ;;
-	esac
-	shift
+        -*|--*)
+            echo "Unknown option $arg"
+            show_help
+            exit 1
+            ;;
+
+        *)
+            break ;;
+    esac
 done
 
 # Just build with config in Makefile
