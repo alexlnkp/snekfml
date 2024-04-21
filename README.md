@@ -45,3 +45,5 @@ I will probably forget to update this README afterwards, so here's the state at 
 - No boundaries! You can fly free straight to the [**65'535** ; **65'535**] coordinates.
 - No quick-succesion presses.
 - No "grace" period when you're about to hit your own tail.
+- No HighScore system.
+- No pause button.
