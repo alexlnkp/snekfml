@@ -45,6 +45,7 @@ constexpr std::pair<int8_t, int8_t> FRUIT_ANCHOR = std::make_pair(15, 15);
 #pragma region Helper Functions and Macros
 
 // A hack so the compiler trusts me for once
+// Spoiler: compiler got fussy
 #define INLINE __attribute__((always_inline)) inline
 
 #define SIGN(T) (0 < T) - (T < 0)

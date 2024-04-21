@@ -166,11 +166,12 @@ INLINE sf::RectangleShape* Fruit::GetFruitRect() {
 }
 
 void Fruit::GenerateNewFruitPosition() {
+GenRandPos:
     F_PosX = rand() % (GRID_X_RESOLUTION - 2) + 1;
     F_PosY = rand() % (GRID_Y_RESOLUTION - 2) + 1;
 
     // Failsafe so the fruit can't spawn in the dead middle
-    if (F_PosX == GRID_MID_POS_X && F_PosY == GRID_MID_POS_Y) this->GenerateNewFruitPosition();
+    if (F_PosX == GRID_MID_POS_X && F_PosY == GRID_MID_POS_Y) goto GenRandPos;
 
     auto GridPosFruit = GetGridPos(F_PosX, F_PosY);
     F_FruitRect.setPosition(GridPosFruit.first, GridPosFruit.second);
