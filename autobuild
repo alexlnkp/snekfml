@@ -72,7 +72,7 @@ if [[ $COMPRESS = 1 ]]; then
 
 	if command -p which upx; then
 		echo "UPX found, proceeding to compress the binary..."
-		upx --best --compress-icons=3 --ultra-brute output/main
+		upx --overlay=strip --best --compress-icons=3 --no-reloc --all-methods --all-filters --no-lzma output/main
 	else
 		echo "UPX not found. Exiting..."
 		exit 0
