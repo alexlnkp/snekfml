@@ -13,5 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: dependency_install
+      run: apt update && apt-get install libsfml-dev
     - name: build
       run: ./autobuild
