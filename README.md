@@ -4,10 +4,13 @@
 Decided to make this to introduce myself to SFML. As it turns out - nothing is quite pleasant whenever you try to fight back against the compiler.
 
 ## Dependencies
-    You'll need to install sfml. That's it.
-    Use your favorite package manager to do so.
+You'll need to install sfml. That's it.
 
-    Examples on different distros:
+Use your favorite package manager to do so.
+
+
+
+Examples on different distros:
 - Arch:
     `pacman -Syu sfml`
 - Ubuntu:
