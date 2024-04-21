@@ -15,5 +15,13 @@ jobs:
     - uses: actions/checkout@v3
     - name: dependency_install
       run: sudo apt update && sudo apt-get install libsfml-dev
-    - name: build
+    - name: build_release_noautobuild
+      run: make clean && make
+    - name: build_debug_noautobuild
+      run: make clean && make DEBUG=1
+    - name: build_release
       run: ./autobuild
+    - name: build_debug
+      run: ./autobuild -d
+    - name: build_grdebug
+      run: ./autobuild -d d
