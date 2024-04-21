@@ -178,8 +178,7 @@ GenRandPos:
 }
 
 Fruit::Fruit() {
-    GRDEBUG(printf("A fruit is initialised at "))
-    GRDEBUG(printf("[X%d; Y%d]\n", F_PosX, F_PosY))
+    GRDEBUG(printf("A fruit is initialised at [X%d; Y%d]\n", F_PosX, F_PosY))
 
     F_FruitRect = sf::RectangleShape({FRUIT_WIDTH, FRUIT_HEIGHT});
     F_FruitRect.setFillColor(GREEN);
