@@ -52,7 +52,7 @@ constexpr std::pair<int8_t, int8_t> FRUIT_ANCHOR = std::make_pair(15, 15);
 // A hack so the compiler trusts me for once
 // Spoiler: compiler got fussy
 // Spoiler X2: apparently if you force compiler to NOT inline a function - binary gets even bigger for some reason
-#define INLINE __attribute__((always_inline)) inline
+#define FASTINL __attribute__((always_inline))
 
 #define SIGN(T) (0 < T) - (T < 0)
 

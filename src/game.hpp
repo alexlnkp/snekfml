@@ -32,12 +32,12 @@ private:
 
 public:
     ~Fruit();
-    static Fruit* GetFruitInstance() noexcept;
-    inline static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) noexcept;
-    void GenerateNewFruitPosition() noexcept;
-    inline std::pair<uint8_t, uint8_t> GetFruitPosition() const noexcept;
+    inline FASTINL static Fruit* GetFruitInstance() noexcept;
+    inline FASTINL static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) noexcept;
+    inline FASTINL void GenerateNewFruitPosition() noexcept;
+    inline FASTINL std::pair<uint8_t, uint8_t> GetFruitPosition() const noexcept;
 
-    inline sf::RectangleShape* GetFruitRect() noexcept;
+    inline FASTINL sf::RectangleShape* GetFruitRect() noexcept;
 };
 
 class Snek {
@@ -71,36 +71,35 @@ public:
     int mainLoop() noexcept;
 
 private:
-    inline void handleEvents() noexcept;
-    inline void updateGame() noexcept;
-    inline void drawGame() noexcept;
+    inline FASTINL void handleEvents() noexcept;
+    inline FASTINL void updateGame() noexcept;
+    inline FASTINL void drawGame() noexcept;
 
-    void KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcept;
+    inline FASTINL void KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcept;
 
 private:
-    inline void DrawSnake(sf::RenderWindow &mWindow) const noexcept;
+    inline FASTINL void DrawSnake(sf::RenderWindow &mWindow) const noexcept;
 
-    inline void MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
+    inline FASTINL void MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
 
-    inline void InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
-    inline void AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) const noexcept;
+    inline FASTINL void InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
+    inline FASTINL void AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) const noexcept;
 
-    inline void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
+    inline FASTINL void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 
-    inline void SetFruitInstance(Fruit* fruit) noexcept;
-    inline void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept;
-    inline void TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
+    inline FASTINL void SetFruitInstance(Fruit* fruit) noexcept;
+    inline FASTINL void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept;
+    inline FASTINL void TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 
-    inline void UpdateScore() noexcept;
+    inline FASTINL void UpdateScore() noexcept;
 };
 
-inline std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) noexcept;
+inline FASTINL std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) noexcept;
 
 #pragma region Debug
 
 GRDEBUG(
-    __attribute__((always_inline))
-    inline void DrawDebugGrid(sf::RenderWindow &mWindow) noexcept {
+    inline __attribute__((always_inline)) void DrawDebugGrid(sf::RenderWindow &mWindow) noexcept {
         for (int i = 0; i < GRID_X_RESOLUTION; i++) {
             for (int j = 0; j < GRID_Y_RESOLUTION; j++) {
                 sf::RectangleShape grSeg({10, 10});

@@ -42,7 +42,7 @@ int Snek::mainLoop() noexcept {
     return 0;
 }
 
-void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcept {
+inline FASTINL void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcept {
     switch(key) {
 
     case sf::Keyboard::Up:    _Snake_Head_S.velocity.Y = -GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
@@ -55,13 +55,13 @@ void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcep
     }
 }
 
-INLINE void Snek::UpdateScore() noexcept {
+inline FASTINL void Snek::UpdateScore() noexcept {
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(7) << Score;
     Text.setString(ss.str());
 }
 
-INLINE void Snek::handleEvents() noexcept {
+inline FASTINL void Snek::handleEvents() noexcept {
     while (mWindow.pollEvent(Event)) {
         switch (Event.type) {
         case sf::Event::Closed: mWindow.close(); goto exit_loop;
@@ -85,11 +85,11 @@ exit_loop:;
 //
 // P being the position on the grid we want to grab real position of.
 // We'll get {x * 20, y * 20} i.e. {60, 60}
-INLINE std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) noexcept {
+inline FASTINL std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) noexcept {
     return std::make_pair<uint16_t, uint16_t>(x * GAME_RESOLUTION, y * GAME_RESOLUTION);
 }
 
-INLINE void Snek::updateGame() noexcept {
+inline FASTINL void Snek::updateGame() noexcept {
     if (T_Updater.getElapsedTime().asMilliseconds() >= 125.f) {
         UpdateSnek(_Snake_Head_S, SnakeTail);
         SetFruitInstance(Fruit::GetFruitInstance());
@@ -106,7 +106,7 @@ INLINE void Snek::updateGame() noexcept {
  *
  * @throws None
  */
-INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
+inline FASTINL void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
     if ((CurrentGameState == GameOver) | (CurrentGameState == Pause)) return;
 
     MoveSnake(Snake_Head, _Snake_Head_S);
@@ -130,7 +130,7 @@ INLINE void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::Rectang
  *
  * @throws None
  */
-INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept {
+inline FASTINL void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept {
     if (PTR_FruitInstance == nullptr) return;
 
     // For some reason without this check a segfault is guaranteed...
@@ -147,7 +147,7 @@ INLINE void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uin
     }
 }
 
-INLINE void Snek::TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
+inline FASTINL void Snek::TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
     for (uint16_t i = 1; i < SnakeTail.size(); i++) {
         if (Snake_Head.getPosition() == SnakeTail.at(i).getPosition()) {
             GRDEBUG(printf("GAME OVER\n"))
@@ -156,7 +156,7 @@ INLINE void Snek::TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::
     }
 }
 
-INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept {
+inline FASTINL void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept {
     Snake_Head.setPosition(GRID_MID_POS_X * GAME_RESOLUTION, GRID_MID_POS_Y * GAME_RESOLUTION);
     Snake_Head.setFillColor(WHITE);
 
@@ -174,7 +174,7 @@ INLINE void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Sn
  *
  * @throws None
  */
-INLINE void Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept {
+inline FASTINL void Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept {
     int8_t velX = _Snake_Head_S.velocity.X;
     int8_t velY = _Snake_Head_S.velocity.Y;
 
@@ -194,7 +194,7 @@ INLINE void Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_
  * 
  * @throws None
  */
-INLINE void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) const noexcept {
+inline FASTINL void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) const noexcept {
     sf::RectangleShape snakeSeg({SNAKE_SEGMENT_WIDTH, SNAKE_SEGMENT_HEIGHT});
     snakeSeg.setOrigin(SNAKE_SEGMENT_ANCHOR.first, SNAKE_SEGMENT_ANCHOR.second);
     snakeSeg.setPosition(PrevSnakeHeadPosition.first, PrevSnakeHeadPosition.second);
@@ -203,14 +203,14 @@ INLINE void Snek::AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) 
     SnakeTail.push_back(snakeSeg);
 }
 
-INLINE void Snek::DrawSnake(sf::RenderWindow &mWindow) const noexcept {
+inline FASTINL void Snek::DrawSnake(sf::RenderWindow &mWindow) const noexcept {
     mWindow.draw(Snake_Head);
     for (sf::RectangleShape snakeSeg : SnakeTail) {
         mWindow.draw(snakeSeg);
     }
 }
 
-INLINE void Snek::drawGame() noexcept {
+inline FASTINL void Snek::drawGame() noexcept {
     mWindow.clear();
 
     GRDEBUG(DrawDebugGrid(mWindow))
@@ -229,7 +229,7 @@ INLINE void Snek::drawGame() noexcept {
 
 Fruit* Fruit::S_PTR_FruitInstanceOrigin = nullptr;
 
-INLINE sf::RectangleShape* Fruit::GetFruitRect() noexcept {
+inline FASTINL sf::RectangleShape* Fruit::GetFruitRect() noexcept {
     return &F_FruitRect;
 }
 
@@ -238,7 +238,7 @@ INLINE sf::RectangleShape* Fruit::GetFruitRect() noexcept {
  *
  * @throws None
  */
-void Fruit::GenerateNewFruitPosition() noexcept {
+inline FASTINL void Fruit::GenerateNewFruitPosition() noexcept {
 GenRandPos:
     F_PosX = rand() % (GRID_X_RESOLUTION - 2) + 1;
     F_PosY = rand() % (GRID_Y_RESOLUTION - 2) + 1;
@@ -272,7 +272,7 @@ Fruit::~Fruit() {
  *
  * @throws None
  */
-INLINE void Snek::SetFruitInstance(Fruit* fruit) noexcept {
+inline FASTINL void Snek::SetFruitInstance(Fruit* fruit) noexcept {
     PTR_FruitInstance = fruit;
 }
 
@@ -284,7 +284,7 @@ INLINE void Snek::SetFruitInstance(Fruit* fruit) noexcept {
  *
  * @throws None
  */
-INLINE void Fruit::DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) noexcept {
+inline FASTINL void Fruit::DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) noexcept {
     mWindow.draw(F_FruitRect);
 }
 
@@ -293,7 +293,7 @@ INLINE void Fruit::DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_Fru
  *
  * @return A pointer to the singleton Fruit instance.
  */
-Fruit* Fruit::GetFruitInstance() noexcept {
+inline FASTINL Fruit* Fruit::GetFruitInstance() noexcept {
     S_PTR_FruitInstanceOrigin = (S_PTR_FruitInstanceOrigin == nullptr) ? new Fruit() : S_PTR_FruitInstanceOrigin;
     return S_PTR_FruitInstanceOrigin;
 }
@@ -309,7 +309,7 @@ Fruit* Fruit::GetFruitInstance() noexcept {
  * @return A pair of (X, Y) coordinates representing the position of the fruit
  * on the game grid.
  */
-INLINE std::pair<uint8_t, uint8_t> Fruit::GetFruitPosition() const noexcept {
+inline FASTINL std::pair<uint8_t, uint8_t> Fruit::GetFruitPosition() const noexcept {
     return std::make_pair(F_PosX - 1, F_PosY - 1);
 }
 
