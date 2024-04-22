@@ -17,7 +17,9 @@ CXX = g++
 LIBRARIES := sfml-graphics
 
 CFLAGS_DEBUG=-Og -g
-CFLAGS_RELEASE=-O3 -fno-gcse # Note: using -Oz for low size causes an INCREASE in file size instead. (somehow...)
+
+# NOTE: difference between -O3 and -Oz in size on average is 18.8948%
+CFLAGS_RELEASE=-flto -Oz -fno-gcse
 
 CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra
 CXXFLAGS_DEBUG := $(CXXFLAGS_COMMON) $(CFLAGS_DEBUG)
