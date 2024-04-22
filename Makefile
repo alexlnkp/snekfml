@@ -21,7 +21,9 @@ CFLAGS_DEBUG=-Og -g
 # NOTE: difference between -O3 and -Oz in size on average is 18.8948%
 # `-fno-exceptions` DOES reduce the COMPILED file size,
 # but UPX makes it not as small as the version with no `-fno-exceptions`, for some reason
-CFLAGS_RELEASE=-Oz -flto -fno-gcse
+CFLAGS_RELEASE=-O3 -flto -fno-gcse
+# Another note: Apparently github actions don't support g++ with -Oz for some reason...
+# Would recommend using it when building locally though.
 
 CXXFLAGS_COMMON := `pkg-config --cflags $(LIBRARIES)` -std=c++17 -Wall -Wextra
 CXXFLAGS_DEBUG := $(CXXFLAGS_COMMON) $(CFLAGS_DEBUG)
