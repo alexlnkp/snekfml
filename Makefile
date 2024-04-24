@@ -95,6 +95,7 @@ $(MAIN): $(OBJECTS)
 -include $(DEPS)
 
 $(BIN)/%.o: $(SRC)/%.cpp
+	$(MD) $(BIN)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c -MMD $<  -o $@
 
 .PHONY: clean run
