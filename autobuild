@@ -5,7 +5,7 @@
 set -e
 
 ADDFLAGS=""
-COMPRESS=1
+COMPRESS=true
 
 show_help() {
 	echo "Usage: $0 [OPTION] [ARG]"
@@ -26,6 +26,35 @@ show_help() {
 	echo
 }
 
+<<'###BLOCK-COMMENT'
+
+Fun fact: building with `./autobuild -d -f` leads to 13252 bytes size.
+Building with `./autobuild` leads to 13480 bytes size
+
+In other words - building as debug leads to lower size executable, for some reason.
+
+$ ./autobuild
+
+. . .
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+     31368 ->     13480   42.97%   linux/amd64   main
+
+---------------------------------------------------------------
+
+$ ./autobuild -d -f
+
+. . .
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+     35520 ->     13252   37.31%   linux/amd64   main
+
+---------------------------------------------------------------
+
+###BLOCK-COMMENT
+
 # To build        Debug - use `./autobuild -d`
 # To build GraphicDebug - use `./autobuild -d X`
 for arg in "$@"; do
@@ -44,11 +73,11 @@ for arg in "$@"; do
         
         -n|--no-compression)
             echo Will not compress compiled executable.
-            COMPRESS=0 ;;
+            COMPRESS=false ;;
 
 		-f|--force-compression)
 			echo Will force compression on compiled executable
-			COMPRESS=1 ;;
+			COMPRESS=true ;;
 
         -*|--*)
             echo "Unknown option $arg"
@@ -65,7 +94,7 @@ done
 make clean && make $ADDFLAGS
 
 # Compress if not building Debug.
-if [[ $COMPRESS = 1 ]]; then
+if [[ $COMPRESS ]]; then
 	# Stripping everything that isn't required to launch the app
 	strip -x -X -s -R .gnu.version -R .gnu.version_r. output/main
 
