@@ -38,6 +38,7 @@ OUTPUT	:= output
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
+BIN     := bin
 
 ifeq ($(OS),Windows_NT)
 MAIN	    := main.exe
@@ -60,8 +61,8 @@ endif
 INCLUDES   := $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
 LIBS	   := $(patsubst %,-L%, $(LIBDIRS:%/=%))
 SOURCES	   := $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
-OBJECTS	   := $(SOURCES:.cpp=.o)
-DEPS	   := $(OBJECTS:.o=.d)
+OBJECTS	   := $(patsubst $(SRC)/%.cpp,$(BIN)/%.o, $(SOURCES))
+DEPS	   := $(patsubst $(SRC)/%.cpp,$(BIN)/%.d, $(SOURCES))
 
 OUTPUTMAIN := $(call FIXPATH,$(OUTPUT)/$(MAIN))
 
@@ -93,7 +94,7 @@ $(MAIN): $(OBJECTS)
 
 -include $(DEPS)
 
-.cpp.o:
+$(BIN)/%.o: $(SRC)/%.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c -MMD $<  -o $@
 
 .PHONY: clean run
