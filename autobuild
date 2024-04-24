@@ -24,7 +24,6 @@ show_help() {
 	echo
 	echo "  Note: If no flags are given, the program will be built in release mode with extra compression afterwards."
 	echo
-	exit 0
 }
 
 # To build        Debug - use `./autobuild -d`
@@ -73,8 +72,11 @@ if [[ $COMPRESS = 1 ]]; then
 	if command -p which upx; then
 		echo "UPX found, proceeding to compress the binary..."
 		upx --overlay=strip --best --compress-icons=3 --no-reloc --all-methods --all-filters --no-lzma output/main
+		exit 0
 	else
 		echo "UPX not found. Exiting..."
 		exit 0
 	fi
 fi
+
+exit 0
