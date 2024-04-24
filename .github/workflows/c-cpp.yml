@@ -12,6 +12,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: dependency_install
-      run: sudo apt update && sudo apt-get install libsfml-dev
+      run: sudo apt-get install libsfml-dev
     - name: test_all
       run: ./autotest
