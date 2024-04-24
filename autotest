@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# The number of tests
+num_tests_passed=0
+total_tests=3
+
+calc() { awk "BEGIN { print "$*" }"; }
+
+run_test() {
+  if "$@"; then
+    ((num_tests_passed++))
+  fi
+}
+
+# Regular Release build
+run_test ./autobuild
+
+# Regular Debug build
+run_test ./autobuild -d
+
+# Debug build with graphic debugging
+run_test ./autobuild -d d
+
+# Clean built stuff
+make clean
+
+let percentage_passed=($num_tests_passed/$total_tests)*100
+
+if [[ $percentage_passed == 100 ]]; then
+    ansi_esc=32 # GREEN - all good :)
+elif [[ $percentage_passed < 50 ]]; then
+    ansi_esc=31 # RED - all is bad, seek for help ASAP.
+else
+    ansi_esc=33 # YELLOW - smth's not right.
+fi
+
+echo -e "\n\033[${ansi_esc}m$num_tests_passed/$total_tests ($percentage_passed%) of tests passed!\033[0m"
+
+if [[ ansi_esc == 32 ]]; then
+    exit 0 # All good!
+elif [[ ansi_esc == 31 ]]; then
+    exit 1 # Not all good.
+else
+    exit 2 # ALL BAD!!!!!
+fi
