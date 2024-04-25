@@ -22,10 +22,7 @@ Snek::Snek(int_least64_t seed) noexcept {
     Text.setLetterSpacing(2.f);
     Text.setPosition(5, WINDOW_HEIGHT - FONT_SIZE - 5);
 
-    std::stringstream ss;
-    ss << std::setfill('0') << std::setw(7) << Score;
-    Text.setString(ss.str());
-
+    UpdateScore();
 }
 
 Snek::~Snek() {
