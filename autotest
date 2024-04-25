@@ -20,7 +20,7 @@ run_test ./autobuild
 run_test ./autobuild -d
 
 # Debug build with graphic debugging
-run_test ./autobuild -d d
+run_test ./autobuild -gd
 
 # Clean built stuff
 make clean
