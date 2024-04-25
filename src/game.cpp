@@ -2,6 +2,7 @@
 #include <SFML/System.hpp>
 #include <random>
 #include <iomanip>
+#include <cstring>
 #include "game.hpp"
 
 Snek::Snek(int_least64_t seed) noexcept {
@@ -42,15 +43,19 @@ int Snek::mainLoop() noexcept {
 inline FASTINL void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcept {
     switch(key) {
 
+    case sf::Keyboard::Escape: CurrentGameState = Pause; break;
+    case sf::Keyboard::P: if (CurrentGameState != GameOver) std::memset(&CurrentGameState, (CurrentGameState ^ (Game ^ Pause)), sizeof(CurrentGameState)); break;
+
     case sf::Keyboard::Up:    _Snake_Head_S.velocity.Y = -GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
     case sf::Keyboard::Down:  _Snake_Head_S.velocity.Y =  GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
 
     case sf::Keyboard::Left:  _Snake_Head_S.velocity.X = -GAME_RESOLUTION; _Snake_Head_S.velocity.Y =   0; break;
     case sf::Keyboard::Right: _Snake_Head_S.velocity.X =  GAME_RESOLUTION; _Snake_Head_S.velocity.Y =   0; break; 
-        
+
     default: break;
     }
 }
+
 
 inline FASTINL void Snek::UpdateScore() noexcept {
     std::stringstream ss;

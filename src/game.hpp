@@ -3,7 +3,7 @@
 #include "gameconfig.h"
 
 // A enum that contains the current state of the game
-enum GameState : uint8_t { Menu, Game, Pause, GameOver };
+enum GameState : uint8_t { GameOver, Menu, Game, Pause };
 
 struct Velocity {
     int8_t X;
