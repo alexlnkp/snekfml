@@ -168,13 +168,22 @@ inline FASTINL void Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S 
     int8_t velX = _Snake_Head_S.velocity.X;
     int8_t velY = _Snake_Head_S.velocity.Y;
 
-    PrevSnakeHeadPosition.first  = Snake_Head.getPosition().x;
-    PrevSnakeHeadPosition.second = Snake_Head.getPosition().y;
+    uint16_t shX = Snake_Head.getPosition().x;
+    uint16_t shY = Snake_Head.getPosition().y;
 
+    PrevSnakeHeadPosition.first  = shX;
+    PrevSnakeHeadPosition.second = shY;
+
+    if (((uint16_t)(shX + velX) > WINDOW_WIDTH) || ((uint16_t)(shY + velY) > WINDOW_HEIGHT)) {
+        CurrentGameState = GameOver;
+        return;
+    }
+    
     Snake_Head.move(velX, velY);
 
     _Snake_Head_S.position.first  += SIGN(velX);
     _Snake_Head_S.position.second += SIGN(velY);
+    
 }
 
 /**
