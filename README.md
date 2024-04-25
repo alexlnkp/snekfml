@@ -46,4 +46,4 @@ I will probably forget to update this README afterwards, so here's the state at 
 - No "grace" period when you're about to hit your own tail.
 
 # Credit
-Font **Angerpoise Lampshade** - TYPODERMIC FONTS INC.
+Original Font **Press Start K** - codeman38

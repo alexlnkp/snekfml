@@ -68,6 +68,7 @@ public:
     int mainLoop() noexcept;
 
 private:
+    inline FASTINL void InitTextFont(sf::Text &Text, sf::Font &TheFont, float LetterSpacing, const uint8_t CharSize, std::pair<int_least32_t, int_least32_t> Pos) noexcept;
     inline FASTINL void handleEvents() noexcept;
     inline FASTINL void updateGame() noexcept;
     inline FASTINL void drawGame() noexcept;

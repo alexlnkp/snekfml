@@ -12,17 +12,7 @@ Snek::Snek(int_least64_t seed) noexcept {
     Snake_Head.setSize({SNAKE_HEAD_WIDTH, SNAKE_HEAD_HEIGHT});
     InitSnakeHead(Snake_Head, _Snake_Head_S);
 
-    // God bless public domain fonts
-    if (!MyFont.loadFromFile(FONT_FILE_PATH)) {
-        exit(-1);
-        return;
-    }
-    
-    Text.setFont(MyFont);
-    Text.setCharacterSize(FONT_SIZE);
-    Text.setLetterSpacing(2.f);
-    Text.setPosition(5, WINDOW_HEIGHT - FONT_SIZE - 5);
-
+    InitTextFont(Text, MyFont, 0.5f, FONT_SIZE, {-2, WINDOW_HEIGHT - FONT_SIZE - 4});
     UpdateScore();
 }
 
@@ -223,6 +213,26 @@ inline FASTINL void Snek::drawGame() noexcept {
     mWindow.draw(Text);
 
     mWindow.display();
+}
+
+/**
+ * Initialises a SFML text object with the given font.
+ *
+ * @param Text The SFML text object to be initialised
+ * @param TheFont The font to use for the text
+ * @param LetterSpacing The letter spacing for the text
+ * @param CharSize The character size for the text
+ * @param Pos The position to place the text on the render window
+ * 
+ * @throws None
+ */
+inline FASTINL void Snek::InitTextFont(sf::Text &Text, sf::Font &TheFont, float LetterSpacing, const uint8_t CharSize, std::pair<int_least32_t, int_least32_t> Pos) noexcept {
+    if (!TheFont.loadFromFile(FONT_FILE_PATH)) { exit(-1); return; }
+
+    Text.setFont(TheFont);
+    Text.setCharacterSize(CharSize);
+    Text.setLetterSpacing(LetterSpacing);
+    Text.setPosition(Pos.first, Pos.second);
 }
 
 #pragma region Fruit

@@ -33,7 +33,7 @@ struct {
 
 #define FRUIT_POINTS_WORTH 10
 
-#define FONT_FILE_PATH "assets/AngerpoiseLampshadeStripped.otf"
+#define FONT_FILE_PATH "assets/NUMBERS_ONLY_prstrtk.ttf"
 constexpr uint8_t FONT_SIZE = (GAME_RESOLUTION + 12);
 
 constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
