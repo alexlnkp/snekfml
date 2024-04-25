@@ -40,9 +40,11 @@ Usage: ./autobuild [OPTION] [ARG]
 <sub>i.e. just do `./autobuild`.</sub>
 
 ## Current state
-I will probably forget to update this README afterwards, so here's the state at the moment of creating the README:
-- No quick-succesion presses.
-- No "grace" period when you're about to hit your own tail.
+TODO:
+- [x] Handle Snake's head collision with its tail
+- [x] Handle Game Over conditions
+- [ ] No quick-succesion presses.
+- [ ] No "grace" period when you're about to hit your own tail.
 
 # Credit
 Original Font **Press Start K** - codeman38
