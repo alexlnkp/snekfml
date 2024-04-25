@@ -25,7 +25,7 @@ Snek::Snek(int_least64_t seed) noexcept {
     UpdateScore();
 }
 
-Snek::~Snek() {
+Snek::~Snek() noexcept {
 
 }
 
@@ -256,7 +256,7 @@ Fruit::Fruit() noexcept {
     GenerateNewFruitPosition();
 }
 
-Fruit::~Fruit() {
+Fruit::~Fruit() noexcept {
 
 }
 

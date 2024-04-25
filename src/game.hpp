@@ -31,7 +31,7 @@ private:
     Fruit() noexcept;
 
 public:
-    ~Fruit();
+    ~Fruit() noexcept;
     inline FASTINL static Fruit* GetFruitInstance() noexcept;
     inline FASTINL void DrawFruit(sf::RenderWindow &mWindow) noexcept;
     inline FASTINL void GenerateNewFruitPosition() noexcept;
@@ -63,7 +63,7 @@ private:
 
 public:
     Snek(int_least64_t seed) noexcept;
-    ~Snek();
+    ~Snek() noexcept;
 
     int mainLoop() noexcept;
 
