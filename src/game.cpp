@@ -92,8 +92,6 @@ inline FASTINL std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) no
 inline FASTINL void Snek::updateGame() noexcept {
     if (T_Updater.getElapsedTime().asMilliseconds() >= 125.f) {
         UpdateSnek(_Snake_Head_S, SnakeTail);
-        SetFruitInstance(Fruit::GetFruitInstance());
-        P_FruitRect = *PTR_FruitInstance->GetFruitRect();
         T_Updater.restart();
     }
 }
@@ -131,16 +129,16 @@ inline FASTINL void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf:
  * @throws None
  */
 inline FASTINL void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept {
-    if (PTR_FruitInstance == nullptr) return;
+    if (Fruit::GetFruitInstance() == nullptr) return;
 
     // For some reason without this check a segfault is guaranteed...
     // Why? Who even knows! Compiling with `-Og -g` never segfaulted here, even without this check
     if (_Snake_Head_S.velocity.X | _Snake_Head_S.velocity.Y) {
-        if (!(_Snake_Head_S.position.first ^ PTR_FruitInstance->GetFruitPosition().first) & !(_Snake_Head_S.position.second ^ PTR_FruitInstance->GetFruitPosition().second)) {
+        if (!(_Snake_Head_S.position.first ^ Fruit::GetFruitInstance()->GetFruitPosition().first) & !(_Snake_Head_S.position.second ^ Fruit::GetFruitInstance()->GetFruitPosition().second)) {
             GRDEBUG(printf("NOMNOMNOM\n"))
             Score += FRUIT_POINTS_WORTH;
             UpdateScore();
-            PTR_FruitInstance->GenerateNewFruitPosition();
+            Fruit::GetFruitInstance()->GenerateNewFruitPosition();
             
             AddSegmentToSnake(SnakeTail);
         }
@@ -216,7 +214,7 @@ inline FASTINL void Snek::drawGame() noexcept {
     GRDEBUG(DrawDebugGrid(mWindow))
 
     // This alone made me suffer more than the whole project so far.
-    Fruit::DrawFruit(mWindow, P_FruitRect);
+    Fruit::GetFruitInstance()->DrawFruit(mWindow);
     
     Snek::DrawSnake(mWindow);
 
@@ -246,7 +244,7 @@ GenRandPos:
     // Failsafe so the fruit can't spawn in the dead middle
     if (F_PosX == GRID_MID_POS_X && F_PosY == GRID_MID_POS_Y) goto GenRandPos;
 
-    auto GridPosFruit = GetGridPos(F_PosX, F_PosY);
+    std::pair<uint16_t, uint16_t> GridPosFruit = GetGridPos(F_PosX, F_PosY);
     F_FruitRect.setPosition(GridPosFruit.first, GridPosFruit.second);
 }
 
@@ -266,17 +264,6 @@ Fruit::~Fruit() {
 }
 
 /**
- * Sets the instance of the Fruit class for the Snek class.
- *
- * @param fruit A pointer to the Fruit instance.
- *
- * @throws None
- */
-inline FASTINL void Snek::SetFruitInstance(Fruit* fruit) noexcept {
-    PTR_FruitInstance = fruit;
-}
-
-/**
  * Draws the fruit on the given render window.
  *
  * @param mWindow The render window to draw the fruit on
@@ -284,7 +271,7 @@ inline FASTINL void Snek::SetFruitInstance(Fruit* fruit) noexcept {
  *
  * @throws None
  */
-inline FASTINL void Fruit::DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) noexcept {
+inline FASTINL void Fruit::DrawFruit(sf::RenderWindow &mWindow) noexcept {
     mWindow.draw(F_FruitRect);
 }
 
