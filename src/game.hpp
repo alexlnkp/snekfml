@@ -31,9 +31,9 @@ private:
     Fruit() noexcept;
 
 public:
-    ~Fruit();
+    ~Fruit() noexcept;
     inline FASTINL static Fruit* GetFruitInstance() noexcept;
-    inline FASTINL static void DrawFruit(sf::RenderWindow &mWindow, sf::RectangleShape F_FruitRect) noexcept;
+    inline FASTINL void DrawFruit(sf::RenderWindow &mWindow) noexcept;
     inline FASTINL void GenerateNewFruitPosition() noexcept;
     inline FASTINL std::pair<uint8_t, uint8_t> GetFruitPosition() const noexcept;
 
@@ -46,9 +46,6 @@ private:
 
     sf::RenderWindow mWindow;
     sf::Event Event;
-
-    Fruit* PTR_FruitInstance;
-    sf::RectangleShape P_FruitRect;
 
     SnakeHead_S _Snake_Head_S = {};
 
@@ -66,7 +63,7 @@ private:
 
 public:
     Snek(int_least64_t seed) noexcept;
-    ~Snek();
+    ~Snek() noexcept;
 
     int mainLoop() noexcept;
 
@@ -87,7 +84,6 @@ private:
 
     inline FASTINL void UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 
-    inline FASTINL void SetFruitInstance(Fruit* fruit) noexcept;
     inline FASTINL void FruitCollision(std::vector<sf::RectangleShape> &SnakeTail, uint_least64_t &Score) noexcept;
     inline FASTINL void TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 
