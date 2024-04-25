@@ -174,7 +174,7 @@ inline FASTINL void Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S 
     PrevSnakeHeadPosition.first  = shX;
     PrevSnakeHeadPosition.second = shY;
 
-    if (((uint16_t)(shX + velX) > WINDOW_WIDTH) || ((uint16_t)(shY + velY) > WINDOW_HEIGHT)) {
+    if (((uint16_t)(shX + velX) > WINDOW_WIDTH - SNAKE_HEAD_WIDTH) || ((uint16_t)(shY + velY) > WINDOW_HEIGHT - SNAKE_HEAD_HEIGHT)) {
         CurrentGameState = GameOver;
         return;
     }
