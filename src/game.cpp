@@ -136,7 +136,7 @@ inline FASTINL void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeT
     // For some reason without this check a segfault is guaranteed...
     // Why? Who even knows! Compiling with `-Og -g` never segfaulted here, even without this check
     if (_Snake_Head_S.velocity.X | _Snake_Head_S.velocity.Y) {
-        if (_Snake_Head_S.position == PTR_FruitInstance->GetFruitPosition()) {
+        if (!(_Snake_Head_S.position.first ^ PTR_FruitInstance->GetFruitPosition().first) & !(_Snake_Head_S.position.second ^ PTR_FruitInstance->GetFruitPosition().second)) {
             GRDEBUG(printf("NOMNOMNOM\n"))
             Score += FRUIT_POINTS_WORTH;
             UpdateScore();
@@ -148,8 +148,8 @@ inline FASTINL void Snek::FruitCollision(std::vector<sf::RectangleShape> &SnakeT
 }
 
 inline FASTINL void Snek::TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
-    for (uint16_t i = 1; i < SnakeTail.size(); i++) {
-        if (Snake_Head.getPosition() == SnakeTail.at(i).getPosition()) {
+    for (sf::RectangleShape &_Snake_Tail_Segment : SnakeTail) {
+        if (Snake_Head.getPosition() == _Snake_Tail_Segment.getPosition()) {
             GRDEBUG(printf("GAME OVER\n"))
             CurrentGameState = GameOver;
         }
@@ -160,8 +160,8 @@ inline FASTINL void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHea
     Snake_Head.setPosition(GRID_MID_POS_X * GAME_RESOLUTION, GRID_MID_POS_Y * GAME_RESOLUTION);
     Snake_Head.setFillColor(WHITE);
 
-    _Snake_Head_S.velocity.X = 0;
-    _Snake_Head_S.velocity.Y = 0;
+    _Snake_Head_S.velocity.X = _Snake_Head_S.velocity.Y = 0;
+
     _Snake_Head_S.position.first = GRID_MID_POS_X;
     _Snake_Head_S.position.second = GRID_MID_POS_Y;
 }
