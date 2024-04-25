@@ -33,8 +33,11 @@ struct {
 
 #define FRUIT_POINTS_WORTH 10
 
-#define FONT_FILE_PATH "assets/NUMBERS_ONLY_prstrtk.ttf"
+#define FONT_FILE_PATH "assets/CROPPED_prstrtk.ttf"
 constexpr uint8_t FONT_SIZE = (GAME_RESOLUTION + 12);
+#define FONT_LETTER_SPACING 1.f
+
+#define GAME_OVER_STRING "GAME OVER"
 
 constexpr uint8_t SNAKE_SEGMENT_WIDTH  = (SNAKE_HEAD_WIDTH - 4);
 constexpr uint8_t SNAKE_SEGMENT_HEIGHT = (SNAKE_HEAD_HEIGHT - 4);
@@ -42,6 +45,12 @@ constexpr std::pair<int8_t, int8_t> SNAKE_SEGMENT_ANCHOR = std::make_pair(-1, -1
 
 constexpr uint8_t GRID_MID_POS_X = ((GRID_X_RESOLUTION >> 1) - 1);
 constexpr uint8_t GRID_MID_POS_Y = ((GRID_Y_RESOLUTION >> 1) - 1);
+
+constexpr uint_least16_t WINDOW_MID_POS_X = (WINDOW_WIDTH >> 1);
+constexpr uint_least16_t WINDOW_MID_POS_Y = (WINDOW_HEIGHT >> 1);
+
+constexpr uint_least16_t K_WINDOW_WIDTH  = (WINDOW_WIDTH - SNAKE_HEAD_WIDTH);
+constexpr uint_least16_t K_WINDOW_HEIGHT = (WINDOW_WIDTH - SNAKE_HEAD_HEIGHT);
 
 constexpr uint8_t FRUIT_WIDTH  = (SNAKE_HEAD_WIDTH - 12);
 constexpr uint8_t FRUIT_HEIGHT = (SNAKE_HEAD_HEIGHT - 12);
@@ -63,5 +72,20 @@ constexpr std::pair<int8_t, int8_t> FRUIT_ANCHOR = std::make_pair(15, 15);
 #   define GRDEBUG(DEB_COM) ;
 #endif
 
+#define INIT_FONT(A) \
+    if (!A.loadFromFile(FONT_FILE_PATH)) { exit(-1); return; } \
+
+#define INIT_SCORE_TEXT                                         \
+    ScoreText.setFont(MyFont);                                  \
+    ScoreText.setCharacterSize(FONT_SIZE);                      \
+    ScoreText.setLetterSpacing(FONT_LETTER_SPACING);            \
+    ScoreText.setPosition({-2, WINDOW_HEIGHT - FONT_SIZE - 4}); \
+
+#define INIT_GAME_OVER_TEXT                                                                       \
+    GameOverText.setString(GAME_OVER_STRING); GameOverText.setFont(MyFont);                       \
+    GameOverText.setCharacterSize(FONT_SIZE); GameOverText.setLetterSpacing(FONT_LETTER_SPACING); \
+    sf::FloatRect rc = GameOverText.getLocalBounds();                                             \
+    GameOverText.setOrigin(rc.left + rc.width / 2, rc.top + rc.height / 2);                       \
+    GameOverText.setPosition(WINDOW_MID_POS_X, WINDOW_MID_POS_Y);                                 \
 
 #pragma endregion

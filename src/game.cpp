@@ -12,7 +12,10 @@ Snek::Snek(int_least64_t seed) noexcept {
     Snake_Head.setSize({SNAKE_HEAD_WIDTH, SNAKE_HEAD_HEIGHT});
     InitSnakeHead(Snake_Head, _Snake_Head_S);
 
-    InitTextFont(Text, MyFont, 0.5f, FONT_SIZE, {-2, WINDOW_HEIGHT - FONT_SIZE - 4});
+    INIT_FONT(MyFont);
+    INIT_SCORE_TEXT
+    INIT_GAME_OVER_TEXT
+
     UpdateScore();
 }
 
@@ -46,11 +49,10 @@ inline FASTINL void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_
     }
 }
 
-
 inline FASTINL void Snek::UpdateScore() noexcept {
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(7) << Score;
-    Text.setString(ss.str());
+    ScoreText.setString(ss.str());
 }
 
 inline FASTINL void Snek::handleEvents() noexcept {
@@ -88,6 +90,10 @@ inline FASTINL void Snek::updateGame() noexcept {
     }
 }
 
+inline FASTINL void Snek::GameOverHandler() noexcept {
+    if (!(CurrentGameState ^ GameOver)) mWindow.draw(GameOverText);
+}
+
 /**
  * Updates the snake's position and handles collision with the fruit.
  *
@@ -97,9 +103,9 @@ inline FASTINL void Snek::updateGame() noexcept {
  * @throws None
  */
 inline FASTINL void Snek::UpdateSnek(SnakeHead_S &_Snake_Head_S, std::vector<sf::RectangleShape> &SnakeTail) noexcept {
-    if ((CurrentGameState == GameOver) | (CurrentGameState == Pause)) return;
+    if (!(CurrentGameState ^ GameOver) | !(CurrentGameState ^ Pause)) return;
 
-    MoveSnake(Snake_Head, _Snake_Head_S);
+    if (!MoveSnake(Snake_Head, _Snake_Head_S)) return;
     TailCollision(Snake_Head, SnakeTail);
 
     FruitCollision(SnakeTail, Score);
@@ -164,17 +170,26 @@ inline FASTINL void Snek::InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHea
  *
  * @throws None
  */
-inline FASTINL void Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept {
+inline FASTINL uint8_t Snek::MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept {
     int8_t velX = _Snake_Head_S.velocity.X;
     int8_t velY = _Snake_Head_S.velocity.Y;
 
-    PrevSnakeHeadPosition.first  = Snake_Head.getPosition().x;
-    PrevSnakeHeadPosition.second = Snake_Head.getPosition().y;
+    uint16_t shX = Snake_Head.getPosition().x;
+    uint16_t shY = Snake_Head.getPosition().y;
 
+    PrevSnakeHeadPosition.first  = shX;
+    PrevSnakeHeadPosition.second = shY;
+
+    if (((uint16_t)(shX + velX) > K_WINDOW_WIDTH) || ((uint16_t)(shY + velY) > K_WINDOW_HEIGHT)) {
+        CurrentGameState = GameOver; return 0;
+    }
+    
     Snake_Head.move(velX, velY);
 
     _Snake_Head_S.position.first  += SIGN(velX);
     _Snake_Head_S.position.second += SIGN(velY);
+    
+    return 1;
 }
 
 /**
@@ -210,29 +225,11 @@ inline FASTINL void Snek::drawGame() noexcept {
     
     Snek::DrawSnake(mWindow);
 
-    mWindow.draw(Text);
+    Snek::GameOverHandler();
+
+    mWindow.draw(ScoreText);
 
     mWindow.display();
-}
-
-/**
- * Initialises a SFML text object with the given font.
- *
- * @param Text The SFML text object to be initialised
- * @param TheFont The font to use for the text
- * @param LetterSpacing The letter spacing for the text
- * @param CharSize The character size for the text
- * @param Pos The position to place the text on the render window
- * 
- * @throws None
- */
-inline FASTINL void Snek::InitTextFont(sf::Text &Text, sf::Font &TheFont, float LetterSpacing, const uint8_t CharSize, std::pair<int_least32_t, int_least32_t> Pos) noexcept {
-    if (!TheFont.loadFromFile(FONT_FILE_PATH)) { exit(-1); return; }
-
-    Text.setFont(TheFont);
-    Text.setCharacterSize(CharSize);
-    Text.setLetterSpacing(LetterSpacing);
-    Text.setPosition(Pos.first, Pos.second);
 }
 
 #pragma region Fruit

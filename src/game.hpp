@@ -57,7 +57,8 @@ private:
     GameState CurrentGameState = Game;
 
     sf::Font MyFont;
-    sf::Text Text;
+    sf::Text ScoreText;
+    sf::Text GameOverText;
 
     uint_least64_t Score = 0;
 
@@ -68,7 +69,6 @@ public:
     int mainLoop() noexcept;
 
 private:
-    inline FASTINL void InitTextFont(sf::Text &Text, sf::Font &TheFont, float LetterSpacing, const uint8_t CharSize, std::pair<int_least32_t, int_least32_t> Pos) noexcept;
     inline FASTINL void handleEvents() noexcept;
     inline FASTINL void updateGame() noexcept;
     inline FASTINL void drawGame() noexcept;
@@ -78,7 +78,7 @@ private:
 private:
     inline FASTINL void DrawSnake(sf::RenderWindow &mWindow) const noexcept;
 
-    inline FASTINL void MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
+    inline FASTINL uint8_t MoveSnake(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
 
     inline FASTINL void InitSnakeHead(sf::RectangleShape &Snake_Head, SnakeHead_S &_Snake_Head_S) noexcept;
     inline FASTINL void AddSegmentToSnake(std::vector<sf::RectangleShape> &SnakeTail) const noexcept;
@@ -89,6 +89,7 @@ private:
     inline FASTINL void TailCollision(sf::RectangleShape &Snake_Head, std::vector<sf::RectangleShape> &SnakeTail) noexcept;
 
     inline FASTINL void UpdateScore() noexcept;
+    inline FASTINL void GameOverHandler() noexcept;
 };
 
 inline FASTINL std::pair<uint16_t, uint16_t> GetGridPos(uint8_t x, uint8_t y) noexcept;
