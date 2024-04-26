@@ -56,11 +56,11 @@ inline FASTINL void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_
         }
         break;
 
-    case sf::Keyboard::Up:    _Snake_Head_S.velocity.Y = -GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
-    case sf::Keyboard::Down:  _Snake_Head_S.velocity.Y =  GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
+    case sf::Keyboard::Up:    if (_Snake_Head_S.velocity.Y <= 0) _Snake_Head_S.velocity.Y = -GAME_RESOLUTION; _Snake_Head_S.velocity.X = 0; break;
+    case sf::Keyboard::Down:  if (_Snake_Head_S.velocity.Y >= 0) _Snake_Head_S.velocity.Y =  GAME_RESOLUTION; _Snake_Head_S.velocity.X = 0; break;
 
-    case sf::Keyboard::Left:  _Snake_Head_S.velocity.X = -GAME_RESOLUTION; _Snake_Head_S.velocity.Y =   0; break;
-    case sf::Keyboard::Right: _Snake_Head_S.velocity.X =  GAME_RESOLUTION; _Snake_Head_S.velocity.Y =   0; break; 
+    case sf::Keyboard::Left:  if (_Snake_Head_S.velocity.X <= 0) _Snake_Head_S.velocity.X = -GAME_RESOLUTION; _Snake_Head_S.velocity.Y = 0; break;
+    case sf::Keyboard::Right: if (_Snake_Head_S.velocity.X >= 0) _Snake_Head_S.velocity.X =  GAME_RESOLUTION; _Snake_Head_S.velocity.Y = 0; break; 
 
     default: break;
     }
