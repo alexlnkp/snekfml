@@ -40,7 +40,6 @@ Usage: ./autobuild [OPTION] [ARG]
 <sub>i.e. just do `./autobuild`.</sub>
 
 ## Current state
-TODO:
 - [x] Handle Snake's head collision with its tail
 - [x] Handle Game Over conditions
 - [ ] Quick-succesion presses.
