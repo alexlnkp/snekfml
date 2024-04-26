@@ -81,11 +81,14 @@ constexpr std::pair<int8_t, int8_t> FRUIT_ANCHOR = std::make_pair(15, 15);
     ScoreText.setLetterSpacing(FONT_LETTER_SPACING);            \
     ScoreText.setPosition({-2, WINDOW_HEIGHT - FONT_SIZE - 4}); \
 
-#define INIT_GAME_OVER_TEXT                                                                       \
-    GameOverText.setString(GAME_OVER_STRING); GameOverText.setFont(MyFont);                       \
-    GameOverText.setCharacterSize(FONT_SIZE); GameOverText.setLetterSpacing(FONT_LETTER_SPACING); \
-    sf::FloatRect rc = GameOverText.getLocalBounds();                                             \
-    GameOverText.setOrigin(rc.left + rc.width / 2, rc.top + rc.height / 2);                       \
-    GameOverText.setPosition(WINDOW_MID_POS_X, WINDOW_MID_POS_Y);                                 \
+#define INIT_GAME_OVER_TEXT                                           \
+    GameOverText.setString(GAME_OVER_STRING);                         \
+    GameOverText.setFont(MyFont);                                     \
+    GameOverText.setCharacterSize(FONT_SIZE);                         \
+    GameOverText.setLetterSpacing(FONT_LETTER_SPACING);               \
+    GameOverText.setOrigin({ GameOverText.getLocalBounds().width / 2, \
+                        GameOverText.getLocalBounds().height / 2 });  \
+    GameOverText.setPosition({ WINDOW_MID_POS_X, WINDOW_MID_POS_Y }); \
+
 
 #pragma endregion

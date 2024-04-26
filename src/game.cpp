@@ -1,11 +1,9 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <random>
 #include <iomanip>
 #include <cstring>
 #include "game.hpp"
 
-Snek::Snek(int_least64_t seed) noexcept {
+Snek::Snek(uint_fast32_t seed) noexcept {
     srand(seed);
     mWindow.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Snake");
     mWindow.setFramerateLimit(FRAMERATE);

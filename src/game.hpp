@@ -63,7 +63,7 @@ private:
     uint_least64_t Score = 0;
 
 public:
-    Snek(int_least64_t seed) noexcept;
+    Snek(uint_fast32_t seed) noexcept;
     ~Snek() noexcept;
 
     int mainLoop() noexcept;
