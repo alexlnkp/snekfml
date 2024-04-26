@@ -42,8 +42,9 @@ Usage: ./autobuild [OPTION] [ARG]
 ## Current state
 - [x] Handle Snake's head collision with its tail
 - [x] Handle Game Over conditions
-- [ ] Quick-succesion presses.
-- [ ] "Grace" period when you're about to hit your own tail or a boundry.
+- [x] Restarting the game after GameOver
+- [ ] Quick-succesion presses
+- [ ] "Grace" period when you're about to hit your own tail or a boundry
 
 # Credit
 Original Font **Press Start K** - codeman38
