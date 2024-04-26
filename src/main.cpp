@@ -6,9 +6,7 @@ int main(int argc, char **argv) {
     // Adds 64 bytes to the size (only for the Release config for some reason)
     GRDEBUG(std::ios_base::sync_with_stdio(false))
 
-    // If no arguments provided - use pseudo-random seed
-    // Else - use user-provided seed
-    Snek game(argc > 1 ? std::stoi(argv[1]) : time(__null));
+    Snek game(argv[1] ? static_cast<uint_fast32_t>(std::stoul(argv[1])) : time(__null));
     game.mainLoop();
 
     return 0;
