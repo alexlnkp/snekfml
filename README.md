@@ -43,8 +43,8 @@ Usage: ./autobuild [OPTION] [ARG]
 TODO:
 - [x] Handle Snake's head collision with its tail
 - [x] Handle Game Over conditions
-- [ ] No quick-succesion presses.
-- [ ] No "grace" period when you're about to hit your own tail.
+- [ ] Quick-succesion presses.
+- [ ] "Grace" period when you're about to hit your own tail or a boundry.
 
 # Credit
 Original Font **Press Start K** - codeman38
