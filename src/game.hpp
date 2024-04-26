@@ -42,6 +42,8 @@ public:
 
 class Snek {
 private:
+    uint_fast32_t GameSeed;
+
     sf::Clock T_Updater;
 
     sf::RenderWindow mWindow;
