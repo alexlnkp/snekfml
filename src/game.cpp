@@ -4,7 +4,8 @@
 #include "game.hpp"
 
 Snek::Snek(uint_fast32_t seed) noexcept {
-    srand(seed);
+    GameSeed = seed; srand(GameSeed);
+
     mWindow.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Snake");
     mWindow.setFramerateLimit(FRAMERATE);
     Snake_Head.setSize({SNAKE_HEAD_WIDTH, SNAKE_HEAD_HEIGHT});
@@ -34,8 +35,26 @@ int Snek::mainLoop() noexcept {
 inline FASTINL void Snek::KeyHandler(sf::Keyboard::Key key, SnakeHead_S &_Snake_Head_S) noexcept {
     switch(key) {
 
-    case sf::Keyboard::Escape: CurrentGameState = Pause; break;
+    case sf::Keyboard::Escape:
     case sf::Keyboard::P: if (CurrentGameState != GameOver) std::memset(&CurrentGameState, (CurrentGameState ^ (Game ^ Pause)), sizeof(CurrentGameState)); break;
+
+    case sf::Keyboard::R:
+        if (CurrentGameState == GameOver) {
+            CurrentGameState = Game; Score = 0;
+            _Snake_Head_S.position.first = GRID_MID_POS_X;
+            _Snake_Head_S.position.second = GRID_MID_POS_Y;
+            _Snake_Head_S.velocity.X = _Snake_Head_S.velocity.Y = 0;
+            Snake_Head.setPosition(GRID_MID_POS_X * GAME_RESOLUTION, GRID_MID_POS_Y * GAME_RESOLUTION);
+            UpdateScore();
+
+            SnakeTail.clear();
+            
+            // Reset the seed. May be useful for learning route and then planning ahead, but not very good for legit game
+            // srand(GameSeed);
+
+            Fruit::GetFruitInstance()->GenerateNewFruitPosition();
+        }
+        break;
 
     case sf::Keyboard::Up:    _Snake_Head_S.velocity.Y = -GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
     case sf::Keyboard::Down:  _Snake_Head_S.velocity.Y =  GAME_RESOLUTION; _Snake_Head_S.velocity.X =   0; break;
