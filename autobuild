@@ -84,6 +84,9 @@ for arg in "$@"; do
 
 		-X|--force-reconfigure)
 			ADDFLAGS="$ADDFLAGS --reconfigure"
+			echo "You will be prompted to recursively remove the \`build\` directory."
+			echo "KEEP IN MIND THIS IS MEANT TO REMOVE THE \`build\` DIRECTORY IN THE PROJECT FOLDER."
+			echo "PLEASE MAKE SURE THAT THE CURRENT LOCATION FROM WHICH YOU EXECUTE THIS SCRIPT (\`$PWD\`) IS THE PROJECT FOLDER"
 			rm -rI 'build/' ;;
 
         -*|--*)
