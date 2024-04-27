@@ -6,6 +6,7 @@ set -e
 
 ADDFLAGS=""
 COMPRESS=true
+BTYPE=release
 
 show_help() {
 	echo "Usage: $0 [OPTION] [ARG]"
@@ -21,6 +22,7 @@ show_help() {
 	echo
 	echo "  -n,  --no-compression    Don't apply any additional compression to compiled executable"
 	echo "  -f,  --force-compression Force compression on compiled executable"
+	echo "  -X,  --force-reconfigure Forcefully remove build directory and reconfigure meson"
 	echo
 	echo "  Note: If no flags are given, the program will be built in release mode with extra compression afterwards."
 	echo
@@ -60,11 +62,12 @@ $ ./autobuild -d -f
 for arg in "$@"; do
     case $arg in
         -d|--debug) 
-            ADDFLAGS="$ADDFLAGS DEBUG=1"
+			BTYPE=debug
             COMPRESS=0 ;;
 
 		-gd|--graphical-debug)
-			ADDFLAGS="$ADDFLAGS DEBUG=1 GRDBG=1"
+			ADDFLAGS="$ADDFLAGS -D cpp_args='-DGRAPHIC_DEBUG'"
+			BTYPE=debug
 			COMPRESS=0 ;;
 
         -h|--help)
@@ -79,28 +82,37 @@ for arg in "$@"; do
 			echo Will force compression on compiled executable
 			COMPRESS=true ;;
 
+		-X|--force-reconfigure)
+			ADDFLAGS="$ADDFLAGS --reconfigure"
+			echo "You will be prompted to recursively remove the \`build\` directory."
+			echo "KEEP IN MIND THIS IS MEANT TO REMOVE THE \`build\` DIRECTORY IN THE PROJECT FOLDER."
+			echo "PLEASE MAKE SURE THAT THE CURRENT LOCATION FROM WHICH YOU EXECUTE THIS SCRIPT (\`$PWD\`) IS THE PROJECT FOLDER"
+			rm -rI 'build/' ;;
+
         -*|--*)
             echo "Unknown option $arg"
             show_help
-            exit 1
-            ;;
-
+            exit 1 ;;
         *)
             break ;;
     esac
 done
 
-# Just build with config in Makefile
-make clean && make $ADDFLAGS
+# Just build with config in meson.build
+if [[ ! -d  "build/" ]]; then
+	meson setup build --buildtype $BTYPE $ADDFLAGS
+fi
+
+meson compile -C build && mv build/snek output/snek
 
 # Compress if not building Debug.
 if [[ $COMPRESS ]]; then
 	# Stripping everything that isn't required to launch the app
-	strip -x -X -s -R .gnu.version -R .gnu.version_r. output/main
+	strip -x -X -s -R .gnu.version -R .gnu.version_r. output/snek
 
 	if command -p which upx; then
 		echo "UPX found, proceeding to compress the binary..."
-		upx --overlay=strip --best --compress-icons=3 --no-reloc --all-methods --all-filters --no-lzma output/main
+		upx --overlay=strip --best --compress-icons=3 --no-reloc --all-methods --all-filters --no-lzma output/snek
 		exit 0
 	else
 		echo "UPX not found. Exiting..."

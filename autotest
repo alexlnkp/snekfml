@@ -15,15 +15,20 @@ run_test() {
 
 # Regular Release build
 run_test ./autobuild
+rm output/snek
 
 # Regular Debug build
 run_test ./autobuild -d
+rm output/snek
 
 # Debug build with graphic debugging
 run_test ./autobuild -gd
+rm output/snek
 
 # Clean built stuff
-make clean
+if [[ -d  "build/" ]]; then
+    rm -r 'build/'
+fi
 
 let percentage_passed=($num_tests_passed/$total_tests)*100
 

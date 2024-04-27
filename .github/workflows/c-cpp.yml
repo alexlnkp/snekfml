@@ -12,6 +12,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: dependency_install
-      run: sudo apt-get install libsfml-dev
+      run: sudo apt-get install libsfml-dev meson ninja-build
     - name: test_all
       run: ./autotest

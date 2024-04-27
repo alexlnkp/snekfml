@@ -20,20 +20,32 @@ Examples on different distros:
 
 On Windows... Uhh... I'm not sure to be entirely honest. You'll probably have to manually link everything... Sorry
 
+## Build dependencies
+You will need meson and ninja to build this project. Use your favorite package manager to install those.
+
+Examples on different distros:
+- Arch:
+    `pacman -Syu meson ninja`
+- Ubuntu:
+    `apt-get install meson ninja-build`
+
 ## Build
 Easy. Use `autobuild` script.
 ```
 Usage: ./autobuild [OPTION] [ARG]
 
-      Common flags:
+       Common flags:
 
-  -h, --help             Show this help message and exit.
-  -d, --debug [X]        Build the program in debug mode. If there's any argument given to this flag - build with GraphicDebugging
+  -h,  --help              Show this help message and exit.
+  -d,  --debug             Build the program in debug mode.
 
-      Compression settings:
+  -gd, --graphical-debug   Build the program with GraphicDebugging
 
-  -n, --nocompression    [OVERRIDE] - Don't apply any additional compression to compiled executable
-  -f, --forcecompression [OVERRIDE] - Force compression on compiled executable
+       OVERRIDE flags:
+
+  -n,  --no-compression    Don't apply any additional compression to compiled executable
+  -f,  --force-compression Force compression on compiled executable
+  -X,  --force-reconfigure Forcefully remove build directory and reconfigure meson
 
   Note: If no flags are given, the program will be built in release mode with extra compression afterwards.
 ```
