@@ -1,4 +1,4 @@
-[![C/C++ CI](https://github.com/alexlnkp/snekfml/actions/workflows/c-cpp.yml/badge.svg?branch=main)](https://github.com/alexlnkp/snekfml/actions/workflows/c-cpp.yml) <sub>...somehow</sub>
+[![CodeQL](https://github.com/alexlnkp/snekfml/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/alexlnkp/snekfml/actions/workflows/codeql.yml) [![C/C++ CI](https://github.com/alexlnkp/snekfml/actions/workflows/c-cpp.yml/badge.svg?branch=main)](https://github.com/alexlnkp/snekfml/actions/workflows/c-cpp.yml) <sub>...somehow</sub>
 
 # **snek**-fml
 
